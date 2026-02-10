@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 👤 Користувачі
+model User {
+  id            Int             @id @default(autoincrement())
+  fullName      String
+  email         String          @unique
+  password      String
+  birthDate     DateTime?
+  phone         String?
+  role          String          @default("user") // "user" или "admin"
+  resetToken    String?         @unique
+  resetTokenExpires DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  isActive      Boolean         @default(true)
+
+  // Relations
+  payments      Payment[]
+  testAccess    TestAccess[]
+  results       TestResult[]
+}
+
+// 📋 Профорієнтаційні тести
+model Test {
+  id              Int             @id @default(autoincrement())
+  title           String
+  description     String?
+  category        String?
+  price           Float?          @default(0)
+  duration        Int?            // в хвилинах
+  questionsCount  Int?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  questions       Question[]
+  access          TestAccess[]
+  results         TestResult[]
+}
+
+// ❓ Питання в тестах
+model Question {
+  id              Int             @id @default(autoincrement())
+  testId          Int
+  text            String
+  questionOrder   Int
+  createdAt       DateTime        @default(now())
+
+  test            Test            @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([testId])
+}
+
+// 💰 Платежи через LiqPay
+model Payment {
+  id                    Int             @id @default(autoincrement())
+  userId                Int
+  orderId               String          @unique
+  amount                Float
+  currency              String          @default("UAH")
+  status                String          @default("pending") // pending, success, failed
+  liqpayTransactionId   String?
+  description           String?
+  createdAt             DateTime        @default(now())
+  completedAt           DateTime?
+  expiresAt             DateTime?
+
+  user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  testAccess            TestAccess[]
+
+  @@index([userId])
+  @@index([orderId])
+}
+
+// 🔓 Доступ користувача до тестів
+model TestAccess {
+  id                    Int             @id @default(autoincrement())
+  userId                Int
+  testId                Int
+  paymentId             Int?
+  hasAccess             Boolean         @default(false)
+  accessGrantedAt       DateTime?
+  accessExpiresAt       DateTime?
+  createdAt             DateTime        @default(now())
+
+  user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test                  Test            @relation(fields: [testId], references: [id], onDelete: Cascade)
+  payment               Payment?        @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, testId])
+  @@index([userId])
+  @@index([testId])
+}
+
+// 📊 Результати пройдених тестів
+model TestResult {
+  id                    Int             @id @default(autoincrement())
+  userId                Int
+  testId                Int
+  scores                String?         // JSON: {"category": score}
+  recommendations       String?         // JSON: рекомендації професій
+  completedAt           DateTime        @default(now())
+
+  user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test                  Test            @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([testId])
+}
