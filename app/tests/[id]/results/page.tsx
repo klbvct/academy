@@ -43,6 +43,7 @@ export default function ResultsPage() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const [showButton, setShowButton] = useState(false)
   const [isGeneratingRecommendations, setIsGeneratingRecommendations] = useState(false)
+  const [progressPercent, setProgressPercent] = useState(0)
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -121,8 +122,10 @@ export default function ResultsPage() {
     const loadResults = async () => {
       try {
         setLoading(true)
+        setProgressPercent(0)
         const token = localStorage.getItem('token')
 
+        setProgressPercent(20)
         const response = await fetch(`/api/tests/${testId}/results`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -132,17 +135,21 @@ export default function ResultsPage() {
         if (!response.ok) {
           setError('Помилка при завантаженні результатів')
           setLoading(false)
+          setProgressPercent(0)
           return
         }
 
+        setProgressPercent(40)
         const data = await response.json()
         setIsResultsPaid(data.isResultsPaid)
         setUserData(data.user)
 
+        setProgressPercent(60)
         // If results are paid and recommendations don't exist, auto-generate them before showing page
         if (data.isResultsPaid && !data.data.recommendations) {
           console.log('Auto-generating recommendations before showing results...')
           try {
+            setProgressPercent(75)
             const recommendations = await generateRecommendations(testId)
             if (recommendations) {
               data.data.recommendations = recommendations
@@ -157,12 +164,15 @@ export default function ResultsPage() {
           }
         }
 
+        setProgressPercent(95)
         setResults(data.data)
+        setProgressPercent(100)
       } catch (err) {
         console.error('Error loading results:', err)
         setError('Помилка при завантаженні результатів')
       } finally {
         setLoading(false)
+        setTimeout(() => setProgressPercent(0), 500)
       }
     }
 
@@ -177,12 +187,17 @@ export default function ResultsPage() {
     if (!contentRef.current) return
     try {
       setIsGeneratingPDF(true)
+      setProgressPercent(0)
+      
+      setProgressPercent(10)
       const canvas = await html2canvas(contentRef.current, {
         scale: 2,
         logging: false,
         allowTaint: true,
         backgroundColor: '#ffffff',
       })
+      
+      setProgressPercent(30)
       const imgData = canvas.toDataURL('image/png')
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
       const pdfWidth = pdf.internal.pageSize.getWidth()
@@ -191,6 +206,8 @@ export default function ResultsPage() {
       const imgHeight = (canvas.height * imgWidth) / canvas.width
       let yPosition = 10
       pdf.addImage(imgData, 'PNG', 10, yPosition, imgWidth, imgHeight)
+      
+      setProgressPercent(60)
       let remainingHeight = imgHeight - pdfHeight + 20
       while (remainingHeight > 0) {
         pdf.addPage()
@@ -198,27 +215,38 @@ export default function ResultsPage() {
         pdf.addImage(imgData, 'PNG', 10, yPosition, imgWidth, imgHeight)
         remainingHeight -= pdfHeight - 20
       }
+      
+      setProgressPercent(90)
       const filename = userData?.name
         ? `профорієнтаційний-тест-${userData.name}.pdf`
         : 'профорієнтаційний-тест.pdf'
       pdf.save(filename)
+      
+      setProgressPercent(100)
     } catch (error) {
       console.error('Error generating PDF:', error)
       alert('Помилка при створенні PDF. Спробуйте потім.')
     } finally {
       setIsGeneratingPDF(false)
+      setProgressPercent(0)
     }
   }
 
   const handleGenerateRecommendations = async () => {
     setIsGeneratingRecommendations(true)
+    setProgressPercent(0)
+    
     await executeWithLoading(async () => {
       try {
+        setProgressPercent(20)
         const recommendations = await generateRecommendations(testId)
+        
+        setProgressPercent(80)
         
         if (!recommendations) {
           alert('Не вдалося згенерувати рекомендації. Спробуйте пізніше.')
           setIsGeneratingRecommendations(false)
+          setProgressPercent(0)
           return
         }
 
@@ -227,12 +255,15 @@ export default function ResultsPage() {
           ...prev,
           recommendations: recommendations
         } : null)
+        
+        setProgressPercent(100)
         alert('Рекомендації успішно згенеровані!')
       } catch (error) {
         console.error('Error generating recommendations:', error)
         alert('Помилка при генерації рекомендацій. Перевірте підключення до інтернету.')
       } finally {
         setIsGeneratingRecommendations(false)
+        setProgressPercent(0)
       }
     })
   }
@@ -240,9 +271,35 @@ export default function ResultsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Завантаження результатів тестування...</p>
+        <div className="text-center w-full max-w-md px-4">
+          <div className="mb-6">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-600 mb-6">Завантаження результатів тестування...</p>
+          </div>
+          
+          {/* Progress bar for initial loading */}
+          {progressPercent > 0 && (
+            <div>
+              <div style={{
+                width: '100%',
+                height: '8px',
+                background: '#e5e7eb',
+                borderRadius: '4px',
+                overflow: 'hidden',
+                position: 'relative'
+              }}>
+                <div style={{
+                  width: `${progressPercent}%`,
+                  height: '100%',
+                  background: 'linear-gradient(90deg, #0c68f5 0%, #764ba2 100%)',
+                  transition: 'width 0.3s ease'
+                }} />
+              </div>
+              <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '12px' }}>
+                {progressPercent}%
+              </p>
+            </div>
+          )}
         </div>
       </div>
     )
@@ -361,6 +418,36 @@ export default function ResultsPage() {
             <span>{isGeneratingPDF ? 'Генерація PDF...' : 'Друк / Зберегти PDF'}</span>
           </button>
         </div>
+        
+        {/* Progress bar for PDF generation */}
+        {isGeneratingPDF && progressPercent > 0 && (
+          <div style={{ marginTop: '12px', width: '100%', maxWidth: '280px' }}>
+            <div style={{
+              width: '100%',
+              height: '20px',
+              background: '#e5e7eb',
+              borderRadius: '4px',
+              overflow: 'hidden',
+              position: 'relative'
+            }}>
+              <div style={{
+                width: `${progressPercent}%`,
+                height: '100%',
+                background: 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)',
+                transition: 'width 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                {progressPercent > 10 && (
+                  <span style={{ color: 'white', fontSize: '10px', fontWeight: 'bold' }}>
+                    {progressPercent}%
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Report content */}
@@ -563,6 +650,40 @@ export default function ResultsPage() {
                     <p style={{ color: '#78350F', marginBottom: '20px', lineHeight: '1.6' }}>
                       На основі комплексного аналізу ваших результатів буде створено персоналізовані рекомендації щодо професійних напрямків та спеціальностей для навчання.
                     </p>
+                    
+                    {/* Progress bar for AI recommendations generation */}
+                    {isGeneratingRecommendations && progressPercent > 0 && (
+                      <div style={{ marginBottom: '15px' }}>
+                        <div style={{
+                          width: '100%',
+                          height: '24px',
+                          background: '#e5e7eb',
+                          borderRadius: '4px',
+                          overflow: 'hidden',
+                          position: 'relative'
+                        }}>
+                          <div style={{
+                            width: `${progressPercent}%`,
+                            height: '100%',
+                            background: 'linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)',
+                            transition: 'width 0.3s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                            {progressPercent > 10 && (
+                              <span style={{ color: 'white', fontSize: '12px', fontWeight: 'bold' }}>
+                                {progressPercent}%
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '8px', textAlign: 'center' }}>
+                          Генерація AI-рекомендацій...
+                        </p>
+                      </div>
+                    )}
+                    
                     <button
                       onClick={handleGenerateRecommendations}
                       disabled={isGeneratingRecommendations}
