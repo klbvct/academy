@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLoadingAction } from '@/app/hooks/useLoadingAction'
 
 interface User {
   id: number
@@ -21,17 +22,23 @@ interface Test {
   duration?: number
   questionsCount?: number
   hasAccess: boolean
-  isPaid: boolean
-  paymentStatus: string
+  isCompleted?: boolean
+  resultsPaid?: boolean
+  completedAt?: string
+  scores?: Record<string, any>
+  recommendations?: string
+  lastCompletedModule?: number // Прогресс теста
 }
 
 export default function DashboardPage() {
   const router = useRouter()
+  const { executeWithLoading } = useLoadingAction()
   const [user, setUser] = useState<User | null>(null)
   const [tests, setTests] = useState<Test[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [purchasing, setPurchasing] = useState<number | null>(null)
+  const [loadingResults, setLoadingResults] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +76,30 @@ export default function DashboardPage() {
 
           const testsData = await testsResponse.json()
           if (testsData.success) {
-            setTests(testsData.tests)
+            const testsWithProgress = testsData.tests
+
+            // Загрузить прогресс для каждого теста с доступом, который не завершен
+            for (const test of testsWithProgress) {
+              if (test.hasAccess && !test.isCompleted) {
+                try {
+                  const progressResponse = await fetch(`/api/tests/${test.id}/progress`, {
+                    headers: {
+                      'Authorization': `Bearer ${token}`,
+                    },
+                  })
+                  if (progressResponse.ok) {
+                    const progressData = await progressResponse.json()
+                    if (progressData.success) {
+                      test.lastCompletedModule = progressData.lastCompletedModule
+                    }
+                  }
+                } catch (err) {
+                  console.error(`Error loading progress for test ${test.id}:`, err)
+                }
+              }
+            }
+
+            setTests(testsWithProgress)
           }
         } else {
           localStorage.removeItem('token')
@@ -92,36 +122,69 @@ export default function DashboardPage() {
   }
 
   const handlePurchaseTest = async (testId: number) => {
-    try {
-      setPurchasing(testId)
-      const token = localStorage.getItem('token')
-      
-      const response = await fetch('/api/user/payments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ testId }),
-      })
+    setPurchasing(testId)
+    await executeWithLoading(async () => {
+      try {
+        const token = localStorage.getItem('token')
+        
+        // Запрашиваем платежную ссылку LiqPay
+        const response = await fetch('/api/liqpay/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ testId }),
+        })
 
-      const data = await response.json()
+        const data = await response.json()
 
-      if (data.success) {
-        // Оновлюємо тести після покупки
-        const updatedTests = tests.map(test =>
-          test.id === testId ? { ...test, isPaid: true, paymentStatus: 'success', hasAccess: true } : test
-        )
-        setTests(updatedTests)
-      } else {
-        alert(data.message || 'Помилка при оплаті')
+        if (data.success && data.checkoutUrl) {
+          // Перенаправляем пользователя на платежную форму LiqPay
+          window.location.href = data.checkoutUrl
+        } else {
+          alert(data.message || 'Помилка при оплаті')
+          setPurchasing(null)
+        }
+      } catch (err) {
+        console.error('Purchase error:', err)
+        alert('Помилка при оплаті')
+        setPurchasing(null)
       }
-    } catch (err) {
-      console.error('Purchase error:', err)
-      alert('Помилка при оплаті')
-    } finally {
-      setPurchasing(null)
-    }
+    })
+  }
+
+  const handlePayForResults = async (testId: number) => {
+    setPurchasing(testId)
+    await executeWithLoading(async () => {
+      try {
+        const token = localStorage.getItem('token')
+        
+        // Запрашиваем платежную ссылку для просмотра результатов
+        const response = await fetch('/api/liqpay/checkout-results', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ testId }),
+        })
+
+        const data = await response.json()
+
+        if (data.success && data.checkoutUrl) {
+          // Перенаправляем пользователя на платежную форму LiqPay
+          window.location.href = data.checkoutUrl
+        } else {
+          alert(data.message || 'Помилка при оплаті')
+          setPurchasing(null)
+        }
+      } catch (err) {
+        console.error('Payment error:', err)
+        alert('Помилка при оплаті')
+        setPurchasing(null)
+      }
+    })
   }
 
   if (loading) {
@@ -172,75 +235,132 @@ export default function DashboardPage() {
         
         {/* Welcome Section */}
         <h2 className="text-3xl font-bold mb-6 text-gray-800">Ласкаво просимо, {user.fullName}!</h2>
-        <p className="text-gray-600 mb-8">Це ваша персональна панель керування. Тут ви можете переглядати свої результати тестів, отримувати рекомендації та планувати свій освітній шлях.</p>
+        <p className="text-gray-600 mb-8">Це ваша персональна панель керування. Тут ви можете проходити тести, переглядати результати та отримувати рекомендації.</p>
 
         {/* Tests Section */}
-        <div>
-          <h3 className="text-2xl font-bold mb-6">Доступні тести</h3>
-          {tests.length === 0 ? (
-            <div className="bg-gray-50 rounded-lg p-8 text-center">
-              <p className="text-gray-600">Нема доступних тестів</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {tests.map((test) => (
-                <div key={test.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition">
-                  <h4 className="text-lg font-semibold mb-2">{test.title}</h4>
-                  <p className="text-gray-600 mb-4">{test.description}</p>
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-sm text-gray-500">⏱️ {test.duration} хв</p>
-                    <span className="text-lg font-bold text-blue-600">{test.price} грн</span>
-                  </div>
-                  
-                  {/* Payment Status */}
-                  <div className="mb-4">
-                    {test.isPaid ? (
-                      <span className="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
-                        Оплачено
-                      </span>
-                    ) : (
-                      <span className="inline-block bg-gray-100 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full">
-                        Не оплачено
-                      </span>
-                    )}
-                  </div>
-                  
-                  <button
-                    onClick={() => {
-                      if (test.hasAccess) {
-                        // Перейти на тест
-                        router.push(`/tests/${test.id}`)
-                      } else {
-                        handlePurchaseTest(test.id)
-                      }
-                    }}
-                    disabled={purchasing === test.id}
-                    className={`w-full rounded-lg py-2 transition font-semibold disabled:opacity-50 ${
-                      test.hasAccess
-                        ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : 'bg-primary text-white hover:bg-blue-600'
-                    }`}
-                  >
-                    {purchasing === test.id
-                      ? 'Обробка...'
-                      : test.hasAccess
-                      ? 'Почати тест'
-                      : 'Купити'}
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Results Section */}
-        <div className="mt-12">
-          <h3 className="text-2xl font-bold mb-6">Ваші результати</h3>
+        <h3 className="text-2xl font-bold mb-6">Доступні тести</h3>
+        {tests.length === 0 ? (
           <div className="bg-gray-50 rounded-lg p-8 text-center">
-            <p className="text-gray-600">Ви ще не пройшли жодних тестів</p>
-            <p className="text-gray-500 text-sm mt-2">Розпочніть перший тест вище, щоб побачити результати</p>
+            <p className="text-gray-600">Нема доступних тестів</p>
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tests.map((test) => (
+              <div key={test.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition flex flex-col">
+                
+                {/* Test Header */}
+                <div className="p-6 border-b border-gray-200">
+                  <h4 className="text-lg font-semibold mb-2">{test.title}</h4>
+                  <p className="text-gray-600 text-sm mb-4">{test.description}</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-gray-500">⏱️ {test.duration} хв</p>
+                    <span className="text-lg font-bold text-blue-600">{test.price} ₴</span>
+                  </div>
+                </div>
+
+                {/* Test Status/Action */}
+                <div className="flex-1 p-6 flex flex-col">
+                  {!test.isCompleted && (
+                    <>
+                      {!test.hasAccess ? (
+                        <button
+                          disabled
+                          className="w-full rounded-lg py-2 transition font-semibold text-gray-500 bg-gray-300 cursor-not-allowed"
+                        >
+                          Доступ обмежено
+                        </button>
+                      ) : (
+                        <>
+                          {/* Прогресс теста */}
+                          {test.lastCompletedModule !== undefined && test.lastCompletedModule > 0 && (
+                            <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                              <p className="text-sm text-blue-800 font-semibold">⚡ Тест розпочато</p>
+                              <p className="text-xs text-blue-700 mt-1">
+                                Пройдено модулів: {test.lastCompletedModule} з 8
+                              </p>
+                              <div className="mt-2 w-full h-2 bg-white rounded-full overflow-hidden">
+                                <div
+                                  className="h-full transition-all rounded-full bg-blue-600"
+                                  style={{ width: `${(test.lastCompletedModule / 8) * 100}%` }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                          <button
+                            onClick={async () => {
+                              setLoadingResults(test.id)
+                              await executeWithLoading(async () => {
+                                router.push(`/tests/${test.id}`)
+                              })
+                            }}
+                            disabled={loadingResults === test.id}
+                            className="w-full rounded-lg py-2 transition font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
+                          >
+                            {loadingResults === test.id ? (
+                              <>
+                                <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Завантаження...
+                              </>
+                            ) : (
+                              test.lastCompletedModule && test.lastCompletedModule > 0 ? 'Продовжити тестування' : 'Почати тест'
+                            )}
+                          </button>
+                        </>
+                      )}
+                    </>
+                  )}
+
+                  {test.isCompleted && !test.resultsPaid && (
+                    <>
+                      <div className="mb-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <p className="text-sm text-yellow-800 font-semibold">✓ Завершено</p>
+                        <p className="text-xs text-yellow-700 mt-1">
+                          {test.completedAt ? new Date(test.completedAt).toLocaleDateString('uk-UA') : 'N/A'}
+                        </p>
+                      </div>
+                      
+                      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                        <p className="text-sm text-gray-600 mb-2">🔒 Результати приховані</p>
+                        <p className="text-xs text-gray-500">Оплатіть доступ для перегляду деталей та рекомендацій</p>
+                      </div>
+
+                      <button
+                        onClick={() => handlePayForResults(test.id)}
+                        disabled={purchasing === test.id}
+                        className="w-full mt-auto rounded-lg py-2 transition font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50"
+                      >
+                        {purchasing === test.id ? 'Обробка...' : 'Оплатити (1 ₴)'}
+                      </button>
+                    </>
+                  )}
+
+                  {test.isCompleted && test.resultsPaid && (
+                    <>
+                      <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                        <p className="text-sm text-green-800 font-semibold">💳 Оплачено</p>
+                        <p className="text-xs text-green-700 mt-1">
+                          ✓ Завершено: {test.completedAt ? new Date(test.completedAt).toLocaleDateString('uk-UA') : 'N/A'}
+                        </p>
+                      </div>
+
+                      <Link
+                        href={`/tests/${test.id}/results`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full mt-auto rounded-lg py-2 transition font-semibold text-white bg-blue-600 hover:bg-blue-700 flex items-center justify-center no-underline hover:no-underline"
+                      >
+                        Переглянути результати
+                      </Link>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   )

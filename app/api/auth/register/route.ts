@@ -1,17 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { generateToken } from '@/lib/jwt'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
-
-function generateToken(userId: number, email: string): string {
-  return jwt.sign(
-    { userId, email },
-    JWT_SECRET,
-    { expiresIn: '7d' }
-  )
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -72,20 +62,20 @@ export async function POST(request: NextRequest) {
         select: { id: true },
       })
 
-      // Створюємо статус доступу "Не доступен" для кожного тесту
+      // Створюємо статус доступу "Доступен" для кожного тесту
       if (tests.length > 0) {
         await prisma.testAccess.createMany({
           data: tests.map(test => ({
             userId: user.id,
             testId: test.id,
-            hasAccess: false,
+            hasAccess: true,
           })),
         })
       }
     }
 
     // Генеруємо JWT токен
-    const token = generateToken(user.id, user.email)
+    const token = generateToken(user.id, user.email, user.role)
 
     return NextResponse.json({
       success: true,

@@ -1,0 +1,56 @@
+// Module 1: Professional Vector (Person-Nature, Person-Technic, etc.)
+export const Module1ProfessionalVector = {
+  id: 'module1',
+  name: 'Професійний вектор',
+  description: 'Виявлення схильності та інтересу до областей: Природа, Техніка, Людина, Знакова система, Художній образ',
+  totalQuestions: 20,
+  scoringKeys: {
+    '1': { a: 'nature', b: 'technic' },
+    '2': { a: 'human', b: 'sign' },
+    '3': { a: 'art', b: 'nature' },
+    '4': { a: 'technic', b: 'human' },
+    '5': { a: 'sign', b: 'art' },
+    '6': { a: 'nature', b: 'human' },
+    '7': { a: 'art', b: 'technic' },
+    '8': { a: 'human', b: 'art' },
+    '9': { a: 'technic', b: 'sign' },
+    '10': { a: 'nature', b: 'sign' },
+    '11': { a: 'nature', b: 'technic' },
+    '12': { a: 'human', b: 'sign' },
+    '13': { a: 'art', b: 'nature' },
+    '14': { a: 'technic', b: 'human' },
+    '15': { a: 'sign', b: 'art' },
+    '16': { a: 'nature', b: 'human' },
+    '17': { a: 'art', b: 'technic' },
+    '18': { a: 'human', b: 'art' },
+    '19': { a: 'technic', b: 'sign' },
+    '20': { a: 'nature', b: 'sign' },
+  },
+  scales: {
+    nature: {
+      name: 'Людина-Природа (П)',
+      abbreviation: 'П',
+      description: 'Сфери діяльності, пов\'язані з дослідженнями природи, біології, тварин та мікроорганізмів, планети, атмосфери, Землі.',
+    },
+    technic: {
+      name: 'Людина-Техніка (Т)',
+      abbreviation: 'Т',
+      description: 'Напрями: винахід та створення, виробництво та переробка. Підтримка існуючого технічного прогресу або винахід нового.',
+    },
+    human: {
+      name: 'Людина-Людина (Ч)',
+      abbreviation: 'Ч',
+      description: 'Пов\'язаний з вивченням та діяльністю людини, її життя, лікування, навчання, соціальною сферою, обслуговуванням, захистом та безпекою.',
+    },
+    sign: {
+      name: 'Людина-Знакова система (З)',
+      abbreviation: 'З',
+      description: 'Тексти, знаки, програмні мови, шифри, коди, формули. Шифрування та дешифрування інформації, створення нових знакових систем.',
+    },
+    art: {
+      name: 'Людина-Художній образ (Х)',
+      abbreviation: 'Х',
+      description: 'Художня творчість, створення продуктів мистецтва, робота із різними жанрами та напрямками. Дизайн як естетична діяльність.',
+    },
+  },
+} as const

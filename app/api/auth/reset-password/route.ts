@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Генерируем новый JWT токен для автоматической авторизации
-    const jwtToken = generateToken(updatedUser.id, updatedUser.email)
+    const jwtToken = generateToken(updatedUser.id, updatedUser.email, updatedUser.role)
 
     return NextResponse.json(
       {

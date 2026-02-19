@@ -5,9 +5,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { GlobalLoadingIndicator } from '@/app/components/GlobalLoadingIndicator'
+import { useLoadingAction } from '@/app/hooks/useLoadingAction'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { executeWithLoading } = useLoadingAction()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -26,31 +29,33 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
+    await executeWithLoading(async () => {
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        })
 
-      const data = await response.json()
+        const data = await response.json()
 
-      if (data.success) {
-        localStorage.setItem('token', data.token)
-        // Перенаправляем в зависимости от роли
-        if (data.user.role === 'admin') {
-          router.push('/admin')
+        if (data.success) {
+          localStorage.setItem('token', data.token)
+          // Перенаправляем в зависимости от роли
+          if (data.user.role === 'admin') {
+            router.push('/admin')
+          } else {
+            router.push('/dashboard')
+          }
         } else {
-          router.push('/dashboard')
+          setError(data.message || 'Помилка входу')
         }
-      } else {
-        setError(data.message || 'Помилка входу')
+      } catch (err) {
+        setError('Помилка підключення до сервера')
+      } finally {
+        setLoading(false)
       }
-    } catch (err) {
-      setError('Помилка підключення до сервера')
-    } finally {
-      setLoading(false)
-    }
+    })
   }
 
   const handleForgotPassword = async (e: React.FormEvent) => {
@@ -59,27 +64,29 @@ export default function LoginPage() {
     setForgotError('')
     setForgotMessage('')
 
-    try {
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: forgotEmail }),
-      })
+    await executeWithLoading(async () => {
+      try {
+        const response = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: forgotEmail }),
+        })
 
-      const data = await response.json()
+        const data = await response.json()
 
-      if (response.ok && data.success) {
-        setForgotSuccess(true)
-        setForgotMessage(data.message || 'Письмо з посиланням на сброс пароля надіслано на вашу email-адресу.')
-        setForgotEmail('')
-      } else {
-        setForgotError(data.message || 'Сталася помилка. Спробуйте ще раз.')
+        if (response.ok && data.success) {
+          setForgotSuccess(true)
+          setForgotMessage(data.message || 'Письмо з посиланням на сброс пароля надіслано на вашу email-адресу.')
+          setForgotEmail('')
+        } else {
+          setForgotError(data.message || 'Сталася помилка. Спробуйте ще раз.')
+        }
+      } catch (err) {
+        setForgotError('Помилка підключення до сервера')
+      } finally {
+        setForgotLoading(false)
       }
-    } catch (err) {
-      setForgotError('Помилка підключення до сервера')
-    } finally {
-      setForgotLoading(false)
-    }
+    })
   }
 
   const closeForgotModal = () => {
@@ -92,6 +99,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      <GlobalLoadingIndicator />
       <Header />
       
       <main className="flex-1 flex items-center justify-center px-4 py-12">
@@ -155,9 +163,15 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {loading ? 'Завантаження...' : 'Увійти'}
+              {loading && (
+                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              )}
+              <span>{loading ? 'Завантаження...' : 'Увійти'}</span>
             </button>
           </form>
 
@@ -190,7 +204,7 @@ export default function LoginPage() {
               <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-green-800 text-sm">{forgotMessage}</p>
                 <p className="text-green-700 text-xs mt-2">
-                  Перевірте папку спаму, якщо не знайдете письмо.
+                  Перевірте папку спаму, якщо не знайдете листа.
                 </p>
               </div>
             )}
@@ -216,9 +230,15 @@ export default function LoginPage() {
                   <button
                     type="submit"
                     disabled={forgotLoading || !forgotEmail}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg transition"
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
                   >
-                    {forgotLoading ? 'Надсилання...' : 'Надіслати'}
+                    {forgotLoading && (
+                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    )}
+                    <span>{forgotLoading ? 'Надсилання...' : 'Надіслати'}</span>
                   </button>
                   <button
                     type="button"

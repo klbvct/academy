@@ -30,7 +30,7 @@ yarn-error.log*
 .env.production.local
 
 # IDE
-.vscode/
+# .vscode/  # раскомментируйте если не хотите хранить настройки VS Code в репо
 .idea/
 *.swp
 *.swo
@@ -40,7 +40,9 @@ yarn-error.log*
 Thumbs.db
 
 # Database
-/prisma/*.db
-/prisma/*.db-journal
-/migrations
+prisma/**/*.db
+prisma/**/*.db-journal
+
+# TypeScript
+*.tsbuildinfo
 

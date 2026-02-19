@@ -47,6 +47,7 @@ model Test {
   questions       Question[]
   access          TestAccess[]
   results         TestResult[]
+  payments        Payment[]
 }
 
 // ❓ Питання в тестах
@@ -66,9 +67,11 @@ model Question {
 model Payment {
   id                    Int             @id @default(autoincrement())
   userId                Int
+  testId                Int
   orderId               String          @unique
   amount                Float
   currency              String          @default("UAH")
+  type                  String          @default("access") // access или results
   status                String          @default("pending") // pending, success, failed
   liqpayTransactionId   String?
   description           String?
@@ -77,10 +80,12 @@ model Payment {
   expiresAt             DateTime?
 
   user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test                  Test            @relation(fields: [testId], references: [id], onDelete: Cascade)
   testAccess            TestAccess[]
 
   @@index([userId])
   @@index([orderId])
+  @@index([testId])
 }
 
 // 🔓 Доступ користувача до тестів
@@ -108,13 +113,15 @@ model TestResult {
   id                    Int             @id @default(autoincrement())
   userId                Int
   testId                Int
+  data                  String?         @default("{}")  // JSON: {"module1": {...}, "module2": {...}}
   scores                String?         // JSON: {"category": score}
   recommendations       String?         // JSON: рекомендації професій
-  completedAt           DateTime        @default(now())
+  completedAt           DateTime?
 
   user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   test                  Test            @relation(fields: [testId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, testId])
   @@index([userId])
   @@index([testId])
 }

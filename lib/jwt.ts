@@ -5,6 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-producti
 export interface DecodedToken {
   userId: number
   email: string
+  role?: string
   iat?: number
   exp?: number
 }
@@ -24,9 +25,9 @@ export function verifyToken(token: string): DecodedToken | null {
 /**
  * Генерирует новый JWT токен
  */
-export function generateToken(userId: number, email: string): string {
+export function generateToken(userId: number, email: string, role?: string): string {
   return jwt.sign(
-    { userId, email },
+    { userId, email, role: role || 'user' },
     JWT_SECRET,
     { expiresIn: '7d' }
   )

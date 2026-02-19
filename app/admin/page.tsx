@@ -129,7 +129,7 @@ export default function AdminPage() {
                           ? 'bg-red-100 text-red-800'
                           : 'bg-blue-100 text-blue-800'
                       }`}>
-                        {user.role === 'admin' ? 'Адмін' : 'User'}
+                        {user.role === 'admin' ? 'Адміністратор' : 'Користувач'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm">

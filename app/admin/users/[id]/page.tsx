@@ -21,6 +21,8 @@ interface TestAccess {
   testTitle: string
   testPrice: number
   hasAccess: boolean
+  hasResults: boolean
+  testCompletedAt?: string
   accessGrantedAt?: string
   paymentStatus: string
   paymentCompletedAt?: string
@@ -40,6 +42,9 @@ export default function UserDetailPage() {
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [isUpdatingAccess, setIsUpdatingAccess] = useState(false)
   const [accessUpdateError, setAccessUpdateError] = useState('')
+  const [isResettingResults, setIsResettingResults] = useState(false)
+  const [resetError, setResetError] = useState('')
+  const [resetSuccess, setResetSuccess] = useState(false)
 
   const [paymentStatus, setPaymentStatus] = useState<string>('unpaid')
   const [hasAccess, setHasAccess] = useState<boolean>(false)
@@ -184,12 +189,11 @@ export default function UserDetailPage() {
       }
 
       setPaymentStatus(newPaymentStatus)
-      setHasAccess(newHasAccess)
       
       // Оновлюємо testAccess
       const updatedAccess = testAccess.map((test, idx) =>
         idx === 0
-          ? { ...test, paymentStatus: newPaymentStatus, hasAccess: newHasAccess }
+          ? { ...test, paymentStatus: newPaymentStatus }
           : test
       )
       setTestAccess(updatedAccess)
@@ -198,6 +202,44 @@ export default function UserDetailPage() {
       setAccessUpdateError('Помилка підключення до сервера')
     } finally {
       setIsUpdatingAccess(false)
+    }
+  }
+
+  const handleResetTestResults = async () => {
+    if (testAccess.length === 0) return
+
+    setIsResettingResults(true)
+    setResetError('')
+    setResetSuccess(false)
+
+    try {
+      const token = localStorage.getItem('token')
+      const firstTest = testAccess[0]
+      
+      const response = await fetch(`/api/admin/users/${userId}/reset-test`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          testId: firstTest.testId,
+        }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        setResetError(data.message || 'Помилка при скиданні результатів')
+        return
+      }
+
+      setResetSuccess(true)
+      setTimeout(() => setResetSuccess(false), 3000)
+    } catch (err) {
+      console.error('Error resetting test:', err)
+      setResetError('Помилка підключення до сервера')
+    } finally {
+      setIsResettingResults(false)
     }
   }
 
@@ -387,7 +429,7 @@ export default function UserDetailPage() {
                   ? 'bg-red-100 text-red-800'
                   : 'bg-blue-100 text-blue-800'
               }`}>
-                {formData.role === 'admin' ? 'Адмін' : 'User'}
+                {formData.role === 'admin' ? 'Адміністратор' : 'Користувач'}
               </span>
             </div>
 
@@ -427,6 +469,18 @@ export default function UserDetailPage() {
                     </div>
                   )}
 
+                  {resetError && (
+                    <div className="bg-red-50 text-red-700 p-2 rounded text-xs mb-3">
+                      {resetError}
+                    </div>
+                  )}
+
+                  {resetSuccess && (
+                    <div className="bg-green-50 text-green-700 p-2 rounded text-xs mb-3">
+                      ✓ Результаты сброшены
+                    </div>
+                  )}
+
                   {/* Payment Status */}
                   <div className="mb-4">
                     <label className="block text-xs font-medium text-gray-700 mb-2">
@@ -434,7 +488,7 @@ export default function UserDetailPage() {
                     </label>
                     <select
                       value={paymentStatus}
-                      onChange={(e) => handleUpdateTestAccess(e.target.value, hasAccess)}
+                      onChange={(e) => handleUpdateTestAccess(e.target.value, true)}
                       disabled={isUpdatingAccess}
                       className="w-full px-2 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
                     >
@@ -442,27 +496,63 @@ export default function UserDetailPage() {
                       <option value="success">Оплачено</option>
                       <option value="pending">В обробці</option>
                     </select>
-                  </div>
-
-                  {/* Access Status */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-2">
-                      Доступ до тесту
-                    </label>
-                    <select
-                      value={hasAccess ? 'true' : 'false'}
-                      onChange={(e) => handleUpdateTestAccess(paymentStatus, e.target.value === 'true')}
-                      disabled={isUpdatingAccess}
-                      className="w-full px-2 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
-                    >
-                      <option value="false">Немає доступу</option>
-                      <option value="true">Доступен</option>
-                    </select>
+                    {testAccess[0].paymentCompletedAt && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Дата оплати: {new Date(testAccess[0].paymentCompletedAt).toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    )}
+                    {testAccess[0].testCompletedAt && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Дата проходження тесту: {new Date(testAccess[0].testCompletedAt).toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    )}
                   </div>
 
                   {isUpdatingAccess && (
                     <p className="text-xs text-gray-500 mt-2">Оновлення...</p>
                   )}
+
+                  <hr className="my-4" />
+
+                  {/* View Test Answers */}
+                  <div className="mb-4">
+                    <p className="text-xs font-medium text-gray-700 mb-2">Перегляд відповідей</p>
+                    {testAccess[0].hasResults ? (
+                      <Link
+                        href={`/admin/users/${userId}/test-answers/${testAccess[0].testId}`}
+                        className="block w-full px-2 py-2 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition font-semibold text-center no-underline hover:no-underline"
+                      >
+                        Переглянути відповіді
+                      </Link>
+                    ) : (
+                      <button
+                        disabled
+                        className="w-full px-2 py-2 bg-gray-300 text-gray-500 text-xs rounded font-semibold cursor-not-allowed"
+                      >
+                        Переглянути відповіді
+                      </button>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">
+                      {testAccess[0].hasResults 
+                        ? 'Переглянути всі відповіді користувача по модулям'
+                        : 'Користувач ще не проходив тестування'}
+                    </p>
+                  </div>
+
+                  <hr className="my-4" />
+
+                  {/* Reset Test Results */}
+                  <div>
+                    <p className="text-xs font-medium text-gray-700 mb-2">Скидання результатів</p>
+                    <button
+                      onClick={handleResetTestResults}
+                      disabled={isResettingResults}
+                      className="w-full px-2 py-2 bg-orange-600 text-white text-xs rounded hover:bg-orange-700 transition disabled:opacity-50 font-semibold"
+                    >
+                      {isResettingResults ? 'Скидання...' : 'Скинути результати та оплату'}
+                    </button>
+                    <p className="text-xs text-gray-500 mt-1">Видалить результати і дозволить пройти тест заново</p>
+                  </div>
                 </div>
               </div>
             )}

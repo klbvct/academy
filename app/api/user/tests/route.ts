@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Получаем все тесты с информацией о доступе текущего пользователя
+    // Получаем все тесты с результатами
     const tests = await prisma.test.findMany({
       select: {
         id: true,
@@ -32,27 +32,63 @@ export async function GET(request: NextRequest) {
         price: true,
         duration: true,
         questionsCount: true,
+        results: {
+          where: {
+            userId: decoded.userId,
+          },
+          select: {
+            completedAt: true,
+            scores: true,
+            recommendations: true,
+          },
+        },
         access: {
           where: {
             userId: decoded.userId,
           },
           select: {
             hasAccess: true,
-            payment: {
-              select: {
-                status: true,
-                completedAt: true,
-              },
-            },
           },
         },
       },
     })
 
+    // Получаем платежи для результатов
+    const payments = await prisma.payment.findMany({
+      where: {
+        userId: decoded.userId,
+        type: 'results',
+      },
+      select: {
+        id: true,
+        testId: true,
+        status: true,
+      },
+    })
+
     // Форматируем ответ
     const formattedTests = tests.map(test => {
-      const userAccess = test.access[0]
-      const isPaid = userAccess?.payment?.status === 'success'
+      const testResult = test.results[0]
+      const isCompleted = testResult?.completedAt !== null && testResult?.completedAt !== undefined
+      const resultsPaid = isCompleted && payments.some(p => p.testId === test.id && p.status === 'success')
+      const hasAccess = test.access[0]?.hasAccess ?? true // По умолчанию доступ есть
+      
+      // Получаем scores и recommendations для завершенных тестов
+      let scores = null
+      let recommendations = null
+      
+      if (isCompleted && resultsPaid && testResult) {
+        // Парсим scores если они есть
+        if (testResult.scores) {
+          try {
+            scores = JSON.parse(testResult.scores)
+          } catch (e) {
+            scores = null
+          }
+        }
+        // Рекомендации уже строка
+        recommendations = testResult.recommendations
+      }
       
       return {
         id: test.id,
@@ -61,9 +97,12 @@ export async function GET(request: NextRequest) {
         price: test.price || 0,
         duration: test.duration,
         questionsCount: test.questionsCount,
-        hasAccess: userAccess?.hasAccess || false,
-        isPaid: isPaid,
-        paymentStatus: userAccess?.payment?.status || 'unpaid',
+        hasAccess: hasAccess,
+        isCompleted: isCompleted,
+        resultsPaid: resultsPaid,
+        completedAt: testResult?.completedAt,
+        scores: scores,
+        recommendations: recommendations,
       }
     })
 

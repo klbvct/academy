@@ -88,17 +88,35 @@ export async function GET(
       },
     })
 
-    // Форматируем ответ
-    const formattedTestAccess = testAccess.map(access => ({
-      id: access.id,
-      testId: access.testId,
-      testTitle: access.test.title,
-      testPrice: access.test.price,
-      hasAccess: access.hasAccess,
-      accessGrantedAt: access.accessGrantedAt,
-      paymentStatus: access.payment?.status || 'unpaid',
-      paymentCompletedAt: access.payment?.completedAt,
-    }))
+    // Проверяем наличие результатов тестирования для каждого теста
+    const formattedTestAccess = await Promise.all(
+      testAccess.map(async (access) => {
+        // Проверяем, есть ли результаты тестирования
+        const testResult = await prisma.testResult.findFirst({
+          where: {
+            userId,
+            testId: access.testId,
+          },
+          select: {
+            id: true,
+            completedAt: true,
+          },
+        })
+
+        return {
+          id: access.id,
+          testId: access.testId,
+          testTitle: access.test.title,
+          testPrice: access.test.price,
+          hasAccess: access.hasAccess,
+          hasResults: !!testResult, // true если результаты есть
+          testCompletedAt: testResult?.completedAt || null,
+          accessGrantedAt: access.accessGrantedAt,
+          paymentStatus: access.payment?.status || 'unpaid',
+          paymentCompletedAt: access.payment?.completedAt,
+        }
+      })
+    )
 
     return NextResponse.json({
       success: true,
@@ -181,8 +199,10 @@ export async function PATCH(
         const newPayment = await prisma.payment.create({
           data: {
             userId,
+            testId,
             orderId: `ORDER_${userId}_${testId}_${Date.now()}`,
             amount: 0,
+            type: 'results',
             status: 'success',
             completedAt: new Date(),
           },
@@ -193,6 +213,7 @@ export async function PATCH(
         await prisma.payment.update({
           where: { id: existingPayment.id },
           data: {
+            type: 'results',
             status: 'success',
             completedAt: new Date(),
           },
@@ -204,6 +225,7 @@ export async function PATCH(
       await prisma.payment.update({
         where: { id: existingPayment.id },
         data: {
+          type: 'results',
           status: 'unpaid',
           completedAt: null,
         },
@@ -214,6 +236,7 @@ export async function PATCH(
       await prisma.payment.update({
         where: { id: existingPayment.id },
         data: {
+          type: 'results',
           status: 'pending',
         },
       })
@@ -233,38 +256,67 @@ export async function PATCH(
       testAccessData.paymentId = paymentId
     }
 
-    const updatedAccess = await prisma.testAccess.upsert({
+    // Проверяем, существует ли уже TestAccess
+    let existingAccess = await prisma.testAccess.findFirst({
       where: {
-        userId_testId: {
-          userId,
-          testId,
-        },
-      },
-      update: testAccessData,
-      create: {
         userId,
         testId,
-        ...testAccessData,
-      },
-      select: {
-        id: true,
-        testId: true,
-        hasAccess: true,
-        accessGrantedAt: true,
-        test: {
-          select: {
-            title: true,
-            price: true,
-          },
-        },
-        payment: {
-          select: {
-            status: true,
-            completedAt: true,
-          },
-        },
       },
     })
+
+    let updatedAccess
+    if (existingAccess) {
+      updatedAccess = await prisma.testAccess.update({
+        where: {
+          id: existingAccess.id,
+        },
+        data: testAccessData,
+        select: {
+          id: true,
+          testId: true,
+          hasAccess: true,
+          accessGrantedAt: true,
+          test: {
+            select: {
+              title: true,
+              price: true,
+            },
+          },
+          payment: {
+            select: {
+              status: true,
+              completedAt: true,
+            },
+          },
+        },
+      })
+    } else {
+      updatedAccess = await prisma.testAccess.create({
+        data: {
+          userId,
+          testId,
+          ...testAccessData,
+        },
+        select: {
+          id: true,
+          testId: true,
+          hasAccess: true,
+          accessGrantedAt: true,
+          test: {
+            select: {
+              title: true,
+              price: true,
+            },
+          },
+          payment: {
+            select: {
+              status: true,
+              completedAt: true,
+            },
+          },
+        },
+      })
+    }
 
     return NextResponse.json({
       success: true,
@@ -274,6 +326,7 @@ export async function PATCH(
         testTitle: updatedAccess.test.title,
         testPrice: updatedAccess.test.price,
         hasAccess: updatedAccess.hasAccess,
+        hasResults: false, // В момент обновления доступа результаты не меняются
         accessGrantedAt: updatedAccess.accessGrantedAt,
         paymentStatus: paymentStatus,
       },
