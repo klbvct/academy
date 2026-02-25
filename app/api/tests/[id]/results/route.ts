@@ -36,17 +36,8 @@ export async function GET(
       return NextResponse.json({ error: 'Test result not found' }, { status: 404 })
     }
 
-    // Проверяем оплачены ли результаты
-    const resultPayment = await prisma.payment.findFirst({
-      where: {
-        userId,
-        testId,
-        type: 'results',
-        status: 'success',
-      },
-    })
-
-    const isResultsPaid = !!resultPayment
+    // Результаты доступны бесплатно после прохождения теста
+    const isResultsPaid = true
 
     return NextResponse.json({
       success: true,

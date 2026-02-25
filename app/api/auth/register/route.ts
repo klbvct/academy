@@ -62,13 +62,13 @@ export async function POST(request: NextRequest) {
         select: { id: true },
       })
 
-      // Створюємо статус доступу "Доступен" для кожного тесту
+      // Доступ до тестів закритий до оплати
       if (tests.length > 0) {
         await prisma.testAccess.createMany({
           data: tests.map(test => ({
             userId: user.id,
             testId: test.id,
-            hasAccess: true,
+            hasAccess: false,
           })),
         })
       }

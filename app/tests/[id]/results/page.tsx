@@ -39,7 +39,6 @@ export default function ResultsPage() {
   const [isResultsPaid, setIsResultsPaid] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [purchasing, setPurchasing] = useState(false)
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const [showButton, setShowButton] = useState(false)
   const [isGeneratingRecommendations, setIsGeneratingRecommendations] = useState(false)
@@ -311,63 +310,6 @@ export default function ResultsPage() {
         <div className="text-center">
           <p className="text-red-600 mb-4">{error || 'Помилка при завантаженні'}</p>
           <Link href="/dashboard" className="text-blue-600 hover:underline">
-            Повернутися до кабінету
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  // Paywall
-  if (!isResultsPaid) {
-    const handlePayment = async () => {
-      setPurchasing(true)
-      await executeWithLoading(async () => {
-        try {
-          const token = localStorage.getItem('token')
-          const response = await fetch('/api/liqpay/checkout-results', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ testId: parseInt(testId) }),
-          })
-          const data = await response.json()
-          if (data.success && data.checkoutUrl) {
-            window.location.href = data.checkoutUrl
-          } else {
-            alert(data.message || 'Помилка при оплаті')
-            setPurchasing(false)
-          }
-        } catch (err) {
-          console.error('Payment error:', err)
-          alert('Помилка при оплаті')
-          setPurchasing(false)
-        }
-      })
-    }
-
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white rounded-2xl p-8 max-w-md w-full" style={{ boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)' }}>
-          <div className="text-center mb-8">
-            <div className="text-5xl mb-4">🔒</div>
-            <h2 className="text-2xl font-bold mb-2">Заблоковано</h2>
-            <p className="text-gray-600 mb-4">
-              Щоб переглянути повні результати тестування з інтерпретацією, необхідно оплатити доступ
-            </p>
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <p className="text-3xl font-bold" style={{ color: '#0c68f5' }}>99 ₴</p>
-              <p className="text-gray-600 text-sm">Одноразова оплата</p>
-            </div>
-          </div>
-          <button
-            onClick={handlePayment}
-            disabled={purchasing}
-            className="w-full py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #0c68f5 0%, #764ba2 100%)' }}
-          >
-            {purchasing ? 'Обробка...' : 'Оплатити'}
-          </button>
-          <Link href="/dashboard" className="block text-center mt-4 text-gray-600 hover:text-gray-800 transition">
             Повернутися до кабінету
           </Link>
         </div>

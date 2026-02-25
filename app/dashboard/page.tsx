@@ -264,10 +264,11 @@ export default function DashboardPage() {
                     <>
                       {!test.hasAccess ? (
                         <button
-                          disabled
-                          className="w-full rounded-lg py-2 transition font-semibold text-gray-500 bg-gray-300 cursor-not-allowed"
+                          onClick={() => handlePurchaseTest(test.id)}
+                          disabled={purchasing === test.id}
+                          className="w-full rounded-lg py-2 transition font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50"
                         >
-                          Доступ обмежено
+                          {purchasing === test.id ? 'Обробка...' : 'Оплатити доступ до тесту'}
                         </button>
                       ) : (
                         <>
@@ -313,36 +314,12 @@ export default function DashboardPage() {
                     </>
                   )}
 
-                  {test.isCompleted && !test.resultsPaid && (
-                    <>
-                      <div className="mb-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <p className="text-sm text-yellow-800 font-semibold">✓ Завершено</p>
-                        <p className="text-xs text-yellow-700 mt-1">
-                          {test.completedAt ? new Date(test.completedAt).toLocaleDateString('uk-UA') : 'N/A'}
-                        </p>
-                      </div>
-                      
-                      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-600 mb-2">🔒 Результати приховані</p>
-                        <p className="text-xs text-gray-500">Оплатіть доступ для перегляду деталей та рекомендацій</p>
-                      </div>
-
-                      <button
-                        onClick={() => handlePayForResults(test.id)}
-                        disabled={purchasing === test.id}
-                        className="w-full mt-auto rounded-lg py-2 transition font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50"
-                      >
-                        {purchasing === test.id ? 'Обробка...' : 'Оплатити (1 ₴)'}
-                      </button>
-                    </>
-                  )}
-
-                  {test.isCompleted && test.resultsPaid && (
+                  {test.isCompleted && (
                     <>
                       <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                        <p className="text-sm text-green-800 font-semibold">💳 Оплачено</p>
+                        <p className="text-sm text-green-800 font-semibold">✓ Завершено</p>
                         <p className="text-xs text-green-700 mt-1">
-                          ✓ Завершено: {test.completedAt ? new Date(test.completedAt).toLocaleDateString('uk-UA') : 'N/A'}
+                          {test.completedAt ? new Date(test.completedAt).toLocaleDateString('uk-UA') : 'N/A'}
                         </p>
                       </div>
 
