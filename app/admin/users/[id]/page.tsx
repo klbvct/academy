@@ -553,14 +553,28 @@ export default function UserDetailPage() {
                   {/* Reset Test Results */}
                   <div>
                     <p className="text-xs font-medium text-gray-700 mb-2">Скидання результатів</p>
-                    <button
-                      onClick={handleResetTestResults}
-                      disabled={isResettingResults}
-                      className="w-full px-2 py-2 bg-orange-600 text-white text-xs rounded hover:bg-orange-700 transition disabled:opacity-50 font-semibold"
-                    >
-                      {isResettingResults ? 'Скидання...' : 'Скинути результати та оплату'}
-                    </button>
-                    <p className="text-xs text-gray-500 mt-1">Видалить результати і дозволить пройти тест заново</p>
+                    {testAccess[0].hasResults || testAccess[0].paymentStatus === 'success' ? (
+                      <>
+                        <button
+                          onClick={handleResetTestResults}
+                          disabled={isResettingResults}
+                          className="w-full px-2 py-2 bg-orange-600 text-white text-xs rounded hover:bg-orange-700 transition disabled:opacity-50 font-semibold"
+                        >
+                          {isResettingResults ? 'Скидання...' : 'Скинути результати та оплату'}
+                        </button>
+                        <p className="text-xs text-gray-500 mt-1">Видалить результати і дозволить пройти тест заново</p>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          disabled
+                          className="w-full px-2 py-2 bg-gray-300 text-gray-500 text-xs rounded font-semibold cursor-not-allowed"
+                        >
+                          Скинути результати та оплату
+                        </button>
+                        <p className="text-xs text-gray-500 mt-1">Немає результатів або оплати для скидання</p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
