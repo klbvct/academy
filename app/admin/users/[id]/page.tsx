@@ -488,7 +488,7 @@ export default function UserDetailPage() {
                     </label>
                     <select
                       value={paymentStatus}
-                      onChange={(e) => handleUpdateTestAccess(e.target.value, true)}
+                      onChange={(e) => handleUpdateTestAccess(e.target.value, e.target.value === 'success')}
                       disabled={isUpdatingAccess}
                       className="w-full px-2 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
                     >
