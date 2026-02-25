@@ -202,7 +202,7 @@ export async function PATCH(
             testId,
             orderId: `ORDER_${userId}_${testId}_${Date.now()}`,
             amount: 0,
-            type: 'results',
+            type: 'access',
             status: 'success',
             completedAt: new Date(),
           },
@@ -213,7 +213,7 @@ export async function PATCH(
         await prisma.payment.update({
           where: { id: existingPayment.id },
           data: {
-            type: 'results',
+            type: 'access',
             status: 'success',
             completedAt: new Date(),
           },
@@ -225,7 +225,7 @@ export async function PATCH(
       await prisma.payment.update({
         where: { id: existingPayment.id },
         data: {
-          type: 'results',
+          type: 'access',
           status: 'unpaid',
           completedAt: null,
         },
@@ -236,7 +236,7 @@ export async function PATCH(
       await prisma.payment.update({
         where: { id: existingPayment.id },
         data: {
-          type: 'results',
+          type: 'access',
           status: 'pending',
         },
       })
