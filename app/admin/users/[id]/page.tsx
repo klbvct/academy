@@ -233,6 +233,15 @@ export default function UserDetailPage() {
         return
       }
 
+      // Обновляем локальный стейт: доступ закрыт, оплата сброшена
+      setPaymentStatus('unpaid')
+      setHasAccess(false)
+      setTestAccess(prev => prev.map(t =>
+        t.testId === firstTest.testId
+          ? { ...t, hasAccess: false, paymentStatus: 'unpaid', hasResults: false, testCompletedAt: undefined, accessGrantedAt: undefined, paymentCompletedAt: undefined }
+          : t
+      ))
+
       setResetSuccess(true)
       setTimeout(() => setResetSuccess(false), 3000)
     } catch (err) {

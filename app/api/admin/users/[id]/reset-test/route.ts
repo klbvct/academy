@@ -34,18 +34,30 @@ export async function POST(
       },
     })
 
-    // Удаляем платежи для результатов этого теста
+    // Удаляем платежи для этого теста (access и results)
     await prisma.payment.deleteMany({
       where: {
         userId,
         testId: parseInt(testId),
-        type: 'results',
+      },
+    })
+
+    // Сбрасываем доступ к тесту (hasAccess = false)
+    await prisma.testAccess.updateMany({
+      where: {
+        userId,
+        testId: parseInt(testId),
+      },
+      data: {
+        hasAccess: false,
+        accessGrantedAt: null,
+        paymentId: null,
       },
     })
 
     return NextResponse.json({
       success: true,
-      message: 'Результаты теста успешно сброшены',
+      message: 'Результати, оплату та доступ до тесту успішно скинуто',
     })
   } catch (error) {
     console.error('Error resetting test:', error)
