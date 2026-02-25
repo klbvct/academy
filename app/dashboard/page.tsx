@@ -263,16 +263,28 @@ export default function DashboardPage() {
                   {!test.isCompleted && (
                     <>
                       {!test.hasAccess ? (
-                        <button
-                          onClick={() => handlePurchaseTest(test.id)}
-                          disabled={purchasing === test.id}
-                          className="w-full rounded-lg py-2 transition font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50"
-                        >
-                          {purchasing === test.id ? 'Обробка...' : 'Оплатити доступ до тесту'}
-                        </button>
+                        <>
+                          <div className="mb-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                            <p className="text-sm text-orange-800 font-semibold">🔒 Доступ до тесту закрито</p>
+                            <p className="text-xs text-orange-700 mt-1">Оплатіть, щоб розпочати профорієнтаційне тестування</p>
+                          </div>
+                          <button
+                            onClick={() => handlePurchaseTest(test.id)}
+                            disabled={purchasing === test.id}
+                            className="w-full rounded-lg py-2 transition font-semibold text-white bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
+                          >
+                            {purchasing === test.id ? 'Обробка...' : 'Оплатити доступ до тесту'}
+                          </button>
+                        </>
                       ) : (
                         <>
                           {/* Прогресс теста */}
+                          {(!test.lastCompletedModule || test.lastCompletedModule === 0) && (
+                            <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                              <p className="text-sm text-green-800 font-semibold">✅ Доступ відкрито</p>
+                              <p className="text-xs text-green-700 mt-1">Починайте в зручний для вас час</p>
+                            </div>
+                          )}
                           {test.lastCompletedModule !== undefined && test.lastCompletedModule > 0 && (
                             <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                               <p className="text-sm text-blue-800 font-semibold">⚡ Тест розпочато</p>
