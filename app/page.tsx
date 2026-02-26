@@ -4,6 +4,24 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import {
+  Target,
+  TrendUp,
+  Question,
+  GraduationCap,
+  Globe,
+  CheckCircle,
+  Lightning,
+  Flask,
+  Robot,
+  Package,
+  Brain,
+  MapTrifold,
+  Image,
+  Video,
+  ChartBar,
+  ArrowRight,
+} from '@phosphor-icons/react'
 
 function useVisible() {
   const [ids, setIds] = useState<Set<string>>(new Set())
@@ -24,42 +42,42 @@ function useVisible() {
 }
 
 const problems = [
-  { icon: '🎯', text: 'Не можете визначити свої таланти та здібності' },
-  { icon: '📈', text: 'Не знаєте, в якій сфері ви зможете розвиватися успішно' },
-  { icon: '💭', text: 'Сумніваєтесь у своїх силах і правильності вибору' },
-  { icon: '🎓', text: 'Не можете обрати напрямок навчання' },
-  { icon: '🌍', text: 'Хочете обрати актуальну галузь для побудови кар&#39;єри' },
-  { icon: '✅', text: 'Отримати впевненість у виборі професії та напрямку навчання' },
+  { icon: <Target size={28} weight="duotone" className="text-blue-500" />, text: 'Не можете визначити свої таланти та здібності' },
+  { icon: <TrendUp size={28} weight="duotone" className="text-blue-500" />, text: 'Не знаєте, в якій сфері ви зможете розвиватися успішно' },
+  { icon: <Question size={28} weight="duotone" className="text-blue-500" />, text: 'Сумніваєтесь у своїх силах і правильності вибору' },
+  { icon: <GraduationCap size={28} weight="duotone" className="text-blue-500" />, text: 'Не можете обрати напрямок навчання' },
+  { icon: <Globe size={28} weight="duotone" className="text-blue-500" />, text: 'Хочете обрати актуальну галузь для побудови кар&#39;єри' },
+  { icon: <CheckCircle size={28} weight="duotone" className="text-blue-500" />, text: 'Отримати впевненість у виборі професії та напрямку навчання' },
 ]
 
 const advantages = [
   {
-    badge: '01', icon: '⚡',
+    badge: '01', icon: <Lightning size={22} weight="duotone" className="text-blue-600" />,
     title: 'Швидко, доступно, самостійно',
     desc: 'Простота доступу та низький поріг входу — пройдіть тест у будь-який зручний момент без зайвих кроків.',
   },
   {
-    badge: '02', icon: '🔬',
+    badge: '02', icon: <Flask size={22} weight="duotone" className="text-blue-600" />,
     title: 'Сучасна авторська методика',
     desc: 'Тест поєднує перевірені міжнародні методики з урахуванням глобальних тенденцій в освіті та впливу AI на майбутні професії.',
   },
   {
-    badge: '03', icon: '🤖',
+    badge: '03', icon: <Robot size={22} weight="duotone" className="text-blue-600" />,
     title: 'Тренди ринку праці та AI',
     desc: 'Аналіз враховує вплив штучного інтелекту та технологій на ринок праці — щоб ваш вибір був актуальним сьогодні та завтра.',
   },
   {
-    badge: '04', icon: '📦',
+    badge: '04', icon: <Package size={22} weight="duotone" className="text-blue-600" />,
     title: 'Повний пакет у вашому кабінеті',
     desc: 'Особистий освітній кабінет, онлайн-тест, детальний письмовий звіт та індивідуальний навчальний профіль — все в одному місці.',
   },
   {
-    badge: '05', icon: '🧠',
+    badge: '05', icon: <Brain size={22} weight="duotone" className="text-blue-600" />,
     title: 'Когнітивні здібності та таланти',
     desc: 'Аналізуємо не лише інтереси, а й ваші когнітивні здібності, сильні та слабкі сторони — те, на що можна спиратися у виборі.',
   },
   {
-    badge: '06', icon: '🗺️',
+    badge: '06', icon: <MapTrifold size={22} weight="duotone" className="text-blue-600" />,
     title: 'Індивідуальна освітня карта',
     desc: 'Не просто перелік професій — а індивідуальна карта галузей, у яких ви можете досягти успіху і обирати серед десятків напрямків.',
   },
@@ -124,7 +142,7 @@ export default function Home() {
                   className={`flex flex-col sm:flex-row gap-4 ${cls(visible, 'h-cta')}`}>
                   <Link href="/register"
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-0.5 transition-all duration-200">
-                    Розпочати тестування →
+                    Розпочати тестування <ArrowRight size={18} weight="bold" />
                   </Link>
                 </div>
               </div>
@@ -133,7 +151,7 @@ export default function Home() {
               <div id="h-image" data-reveal="" style={{ transitionDelay: '360ms' }}
                 className={`${cls(visible, 'h-image')}`}>
                 <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 overflow-hidden aspect-square flex flex-col items-center justify-center gap-3 text-gray-400">
-                  <div className="text-6xl">🖼️</div>
+                  <Image size={64} weight="thin" className="text-gray-300" />
                   <p className="text-base font-medium">Зображення або GIF</p>
                   <p className="text-sm text-gray-300">Тут буде представлено демо</p>
                 </div>
@@ -159,7 +177,7 @@ export default function Home() {
               {problems.map((p, i) => (
                 <div key={i} id={`pb-${i}`} data-reveal="" style={{ transitionDelay: `${i * 70}ms` }}
                   className={`flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm hover:shadow-md hover:border-blue-100 hover:-translate-y-1 transition-all duration-300 ${cls(visible, `pb-${i}`)}`}>
-                  <span className="text-2xl flex-shrink-0">{p.icon}</span>
+                  <span className="flex-shrink-0 mt-0.5">{p.icon}</span>
                   <p className="text-sm text-gray-600 leading-relaxed">{p.text}</p>
                 </div>
               ))}
@@ -184,7 +202,7 @@ export default function Home() {
               {advantages.map((a, i) => (
                 <div key={i} id={`av-${i}`} data-reveal="" style={{ transitionDelay: `${i * 70}ms` }}
                   className={`flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md hover:border-blue-100 hover:-translate-y-1 transition-all duration-300 ${cls(visible, `av-${i}`)}`}>
-                  <div className="flex-shrink-0 h-11 w-11 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-xl">
+                  <div className="flex-shrink-0 h-11 w-11 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
                     {a.icon}
                   </div>
                   <div>
@@ -216,7 +234,7 @@ export default function Home() {
               <div id="hw-steps" data-reveal="" style={{ transitionDelay: '0ms' }}
                 className={`space-y-3 ${cls(visible, 'hw-steps')}`}>
                 {steps.map((s, i) => (
-                  <div key={i} className="flex items-start gap-4 group">
+                  <div key={i} className="flex items-center gap-4 group">
                     <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-blue-200 group-hover:scale-110 transition-transform">
                       {i + 1}
                     </div>
@@ -230,7 +248,7 @@ export default function Home() {
               <div id="hw-media" data-reveal="" style={{ transitionDelay: '200ms' }}
                 className={`${cls(visible, 'hw-media')}`}>
                 <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white overflow-hidden aspect-[4/3] flex flex-col items-center justify-center gap-3 text-gray-400">
-                  <div className="text-5xl">🎬</div>
+                  <Video size={52} weight="thin" className="text-gray-300" />
                   <p className="text-sm font-medium">Демо реєстрації та тестування</p>
                   <p className="text-xs text-gray-300">GIF / відео</p>
                 </div>
@@ -255,7 +273,7 @@ export default function Home() {
             <div id="rs-media" data-reveal="" style={{ transitionDelay: '200ms' }}
               className={`${cls(visible, 'rs-media')}`}>
               <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 overflow-hidden aspect-video flex flex-col items-center justify-center gap-3 text-gray-400">
-                <div className="text-6xl">📊</div>
+                <ChartBar size={64} weight="thin" className="text-gray-300" />
                 <p className="text-base font-medium">Демо звіту тестування</p>
                 <p className="text-sm text-gray-300">GIF зі звітом</p>
               </div>
@@ -282,7 +300,7 @@ export default function Home() {
               <div className="relative flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/register"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-blue-700 shadow-lg hover:bg-blue-50 hover:-translate-y-0.5 transition-all duration-200">
-                  Розпочати тестування →
+                  Розпочати тестування <ArrowRight size={18} weight="bold" />
                 </Link>
               </div>
             </div>
