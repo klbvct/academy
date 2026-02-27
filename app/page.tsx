@@ -102,18 +102,17 @@ export default function Home() {
   const visible = useVisible()
   const videoRef = useRef<HTMLVideoElement>(null)
   const [gallery] = useState<string[]>(Array(9).fill('/landing/background_hero.webp'))
-  const [modalIndex, setModalIndex] = useState<number | null>(null)
   const [startIndex, setStartIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
   // auto-advance carousel every 3 seconds; pause while modal is open or on hover/touch
   useEffect(() => {
-    if (modalIndex !== null || isPaused) return // pause auto-scroll when modal open or user paused
+    if (isPaused) return // pause auto-scroll when user paused
     const id = setInterval(() => {
       setStartIndex((s) => (s < Math.max(0, gallery.length - 3) ? s + 1 : 0))
     }, 3000)
     return () => clearInterval(id)
-  }, [gallery.length, modalIndex, isPaused])
+  }, [gallery.length, isPaused])
 
   useEffect(() => {
     const t = setTimeout(() => videoRef.current?.play(), 500)
@@ -317,14 +316,13 @@ export default function Home() {
                 <div className="overflow-hidden">
                   <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${startIndex * (100 / 3)}%)` }}>
                     {gallery.map((src, i) => (
-                      <button key={i} onClick={() => setModalIndex(i)} className="flex-shrink-0 p-1" style={{ flex: '0 0 33.3333%' }}>
+                      <div key={i} className="flex-shrink-0 p-1" style={{ flex: '0 0 33.3333%' }}>
                         <div className="rounded-lg overflow-hidden bg-white border border-gray-200 shadow-sm flex items-center justify-center">
-                          {/* A4 portrait sheet simulation with margins (fields) */}
                           <div style={{ aspectRatio: '210 / 297', width: '100%', padding: 20, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff' }}>
                             <img src={src} alt={`result-${i}`} className="block" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: '#ffffff' }} />
                           </div>
                         </div>
-                      </button>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -340,28 +338,7 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* Modal viewer */}
-              {modalIndex !== null && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-                  <div className="relative max-w-4xl w-full mx-4">
-                    <button onClick={() => setModalIndex(null)} className="absolute -top-3 -right-3 bg-white rounded-full p-2 shadow-lg">
-                      <X size={20} />
-                    </button>
-                    <img src={gallery[modalIndex]} alt={`full-${modalIndex}`} className="w-full h-[70vh] object-contain rounded-lg bg-black" />
-
-                    <div className="absolute left-2 top-1/2 -translate-y-1/2">
-                      <button onClick={() => setModalIndex((v) => (v === null ? null : (v + gallery.length - 1) % gallery.length))} className="bg-white rounded-full p-2 shadow-lg">
-                        <CaretLeft size={20} />
-                      </button>
-                    </div>
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                      <button onClick={() => setModalIndex((v) => (v === null ? null : (v + 1) % gallery.length))} className="bg-white rounded-full p-2 shadow-lg">
-                        <CaretRight size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+ 
             </div>
           </div>
         </section>
