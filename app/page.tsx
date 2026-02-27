@@ -212,19 +212,16 @@ export default function Home() {
         <section className="py-24 bg-gray-50">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-14">
-              <div id="pb-badge" data-reveal="" style={{ transitionDelay: '0ms' }}
-                className={`inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm font-medium text-gray-600 mb-4 shadow-sm ${cls(visible, 'pb-badge')}`}>
+              <div id="pb-badge" className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm font-medium text-gray-600 mb-4 shadow-sm">
                 Чи знайоме вам це?
               </div>
-              <h2 id="pb-h" data-reveal="" style={{ transitionDelay: '100ms' }}
-                className={`font-sans text-3xl md:text-4xl font-bold text-gray-900 ${cls(visible, 'pb-h')}`}>
+              <h2 id="pb-h" className="font-sans text-3xl md:text-4xl font-bold text-gray-900">
                 Проблема та рішення
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {problems.map((p, i) => (
-                <div key={i} id={`pb-${i}`} data-reveal="" style={{ transitionDelay: `${i * 70}ms` }}
-                  className={`flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm hover:shadow-md hover:border-blue-100 hover:-translate-y-1 transition-all duration-300 ${cls(visible, `pb-${i}`)}`}>
+                <div key={i} id={`pb-${i}`} className="flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm hover:shadow-md hover:border-blue-100 hover:-translate-y-1 transition-all duration-300">
                   <span className="flex-shrink-0 mt-0.5">{p.icon}</span>
                   <p className="text-sm text-gray-600 leading-relaxed">{p.text}</p>
                 </div>
@@ -237,19 +234,16 @@ export default function Home() {
         <section className="py-24 bg-white">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-16">
-              <div id="av-badge" data-reveal="" style={{ transitionDelay: '0ms' }}
-                className={`inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4 ${cls(visible, 'av-badge')}`}>
+              <div id="av-badge" className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
                 Чому ми?
               </div>
-              <h2 id="av-h" data-reveal="" style={{ transitionDelay: '100ms' }}
-                className={`font-sans text-3xl md:text-4xl font-bold text-gray-900 ${cls(visible, 'av-h')}`}>
+              <h2 id="av-h" className="font-sans text-3xl md:text-4xl font-bold text-gray-900">
                 Переваги та Цінність
               </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {advantages.map((a, i) => (
-                <div key={i} id={`av-${i}`} data-reveal="" style={{ transitionDelay: `${i * 70}ms` }}
-                  className={`flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md hover:border-blue-100 hover:-translate-y-1 transition-all duration-300 ${cls(visible, `av-${i}`)}`}>
+                <div key={i} id={`av-${i}`} className="flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md hover:border-blue-100 hover:-translate-y-1 transition-all duration-300">
                   <div className="flex-shrink-0 h-11 w-11 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
                     {a.icon}
                   </div>
@@ -309,18 +303,15 @@ export default function Home() {
         <section className="py-24 bg-white">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-12">
-              <div id="rs-badge" data-reveal="" style={{ transitionDelay: '0ms' }}
-                className={`inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4 ${cls(visible, 'rs-badge')}`}>
+              <div id="rs-badge" className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
                 Результат
               </div>
-              <h2 id="rs-h" data-reveal="" style={{ transitionDelay: '100ms' }}
-                className={`font-sans text-3xl md:text-4xl font-bold text-gray-900 ${cls(visible, 'rs-h')}`}>
+              <h2 id="rs-h" className="font-sans text-3xl md:text-4xl font-bold text-gray-900">
                 Що отримаєте після тестування
               </h2>
             </div>
 
-            <div id="rs-media" data-reveal="" style={{ transitionDelay: '200ms' }}
-              className={`${cls(visible, 'rs-media')}`}>
+            <div id="rs-media">
               {/* Carousel showing 3 items at once (thumbnails are portrait 9:16) */}
               <div className="relative" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)} onTouchStart={() => setIsPaused(true)} onTouchEnd={() => setIsPaused(false)}>
                 <div className="overflow-hidden">
