@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -17,7 +17,6 @@ import {
   Package,
   Brain,
   MapTrifold,
-  Image,
   Video,
   ChartBar,
   ArrowRight,
@@ -46,7 +45,7 @@ const problems = [
   { icon: <TrendUp size={28} weight="duotone" className="text-blue-500" />, text: 'Не знаєте, в якій сфері ви зможете розвиватися успішно' },
   { icon: <Question size={28} weight="duotone" className="text-blue-500" />, text: 'Сумніваєтесь у своїх силах і правильності вибору' },
   { icon: <GraduationCap size={28} weight="duotone" className="text-blue-500" />, text: 'Не можете обрати напрямок навчання' },
-  { icon: <Globe size={28} weight="duotone" className="text-blue-500" />, text: 'Хочете обрати актуальну галузь для побудови кар&#39;єри' },
+  { icon: <Globe size={28} weight="duotone" className="text-blue-500" />, text: 'Хочете обрати актуальну галузь для побудови кар`єри' },
   { icon: <CheckCircle size={28} weight="duotone" className="text-blue-500" />, text: 'Отримати впевненість у виборі професії та напрямку навчання' },
 ]
 
@@ -85,7 +84,7 @@ const advantages = [
 
 const steps = [
   'Реєстрація і створення особистого кабінету.',
-  'Покупка доступу до тестування.',
+  'Покупка доступу до тестування (вартість — 1700 грн).',
   'Проходьте тест у зручний для вас час (≈ 60 хвилин). Відповідайте чесно — так результати будуть максимально точними.',
   'Тест складається з 8 модулів. До кожного — докладний опис та інструкція. Можна зберегти прогрес і продовжити пізніше.',
   'Отримуєш розгорнутий аналіз: вектори спрямованості, типи мислення, мотивація, цінності, типологія інтересів, особливості сприйняття.',
@@ -98,6 +97,12 @@ const cls = (visible: Set<string>, id: string) =>
 
 export default function Home() {
   const visible = useVisible()
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const t = setTimeout(() => videoRef.current?.play(), 500)
+    return () => clearTimeout(t)
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -120,7 +125,7 @@ export default function Home() {
               <div>
                 {/* pill badge */}
                 <div id="h-badge" data-reveal="" style={{ transitionDelay: '0ms' }}
-                  className={`inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-6 ${cls(visible, 'h-badge')}`}>
+                  className={`inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs sm:text-sm font-medium text-blue-700 mb-6 ${cls(visible, 'h-badge')}`}>
                   <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
                   Сучасне комплексне кар&#39;єрне тестування
                 </div>
@@ -139,21 +144,48 @@ export default function Home() {
                 </p>
 
                 <div id="h-cta" data-reveal="" style={{ transitionDelay: '240ms' }}
-                  className={`flex flex-col sm:flex-row gap-4 ${cls(visible, 'h-cta')}`}>
+                  className={`flex flex-col gap-4 ${cls(visible, 'h-cta')}`}>
                   <Link href="/register"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-0.5 transition-all duration-200">
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-0.5 transition-all duration-200 w-fit">
                     Розпочати тестування <ArrowRight size={18} weight="bold" />
                   </Link>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-2xl font-bold text-gray-900">1 700 грн</span>
+                    <span className="w-px h-6 bg-blue-400/50" />
+                    <span className="text-sm text-gray-400">повний доступ</span>
+                  </div>
                 </div>
               </div>
 
-              {/* RIGHT: Image Placeholder */}
+              {/* RIGHT: Video block */}
               <div id="h-image" data-reveal="" style={{ transitionDelay: '360ms' }}
-                className={`${cls(visible, 'h-image')}`}>
-                <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 overflow-hidden aspect-square flex flex-col items-center justify-center gap-3 text-gray-400">
-                  <Image size={64} weight="thin" className="text-gray-300" />
-                  <p className="text-base font-medium">Зображення або GIF</p>
-                  <p className="text-sm text-gray-300">Тут буде представлено демо</p>
+                className={`flex justify-center ${cls(visible, 'h-image')}`}>
+                <div className="relative w-full max-w-lg">
+                  {/* glow behind */}
+                  <div className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-blue-200/50 to-blue-100/30 blur-2xl -z-10" />
+                  {/* card */}
+                  <div className="rounded-2xl overflow-hidden border border-white/80 shadow-2xl shadow-blue-100/60 bg-white/60 backdrop-blur-sm">
+                    {/* top bar */}
+                    <div className="flex items-center gap-1.5 px-4 h-9 bg-gray-100/80 border-b border-gray-200/60">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                      <div className="flex-1 mx-3 h-4 rounded-full bg-gray-200/80 flex items-center px-2">
+                        <span className="text-[9px] text-gray-400 tracking-wide truncate">education-design.com.ua/report</span>
+                      </div>
+                    </div>
+                    {/* video */}
+                    <video
+                      ref={videoRef}
+                      className="w-full aspect-video object-cover block"
+                      src="/landing/proforiientatsiine-testuvannia.mp4"
+                      poster="/landing/background_hero.webp"
+                      muted
+                      loop
+                      playsInline
+                      preload="auto"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -297,11 +329,16 @@ export default function Home() {
               <p className="relative text-blue-200 text-lg mb-10">
                 Пройдіть тестування і отримайте персональні рекомендації
               </p>
-              <div className="relative flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="relative flex flex-col items-center gap-5 justify-center">
                 <Link href="/register"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-blue-700 shadow-lg hover:bg-blue-50 hover:-translate-y-0.5 transition-all duration-200">
                   Розпочати тестування <ArrowRight size={18} weight="bold" />
                 </Link>
+                <div className="flex items-center gap-2 text-blue-200">
+                  <span className="text-xl font-bold text-white">1 700 грн</span>
+                  <span className="w-px h-4 bg-blue-400/50" />
+                  <span className="text-sm">повний доступ</span>
+                </div>
               </div>
             </div>
           </div>
