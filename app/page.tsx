@@ -104,15 +104,16 @@ export default function Home() {
   const [gallery] = useState<string[]>(Array(9).fill('/landing/background_hero.webp'))
   const [startIndex, setStartIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(true)
+  const visibleCount = 3
+  const items = [...gallery, ...gallery.slice(0, visibleCount)]
 
-  // auto-advance carousel every 3 seconds; pause while modal is open or on hover/touch
+  // auto-advance carousel every 3 seconds; pause while paused
   useEffect(() => {
-    if (isPaused) return // pause auto-scroll when user paused
-    const id = setInterval(() => {
-      setStartIndex((s) => (s < Math.max(0, gallery.length - 3) ? s + 1 : 0))
-    }, 1000)
+    if (isPaused) return
+    const id = setInterval(() => setStartIndex((s) => s + 1), 3000)
     return () => clearInterval(id)
-  }, [gallery.length, isPaused])
+  }, [isPaused])
 
   useEffect(() => {
     const t = setTimeout(() => videoRef.current?.play(), 500)
@@ -314,9 +315,24 @@ export default function Home() {
               {/* Carousel showing 3 items at once (thumbnails are portrait 9:16) */}
               <div className="relative" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)} onTouchStart={() => setIsPaused(true)} onTouchEnd={() => setIsPaused(false)}>
                 <div className="overflow-hidden">
-                  <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${startIndex * (100 / 3)}%)` }}>
-                    {gallery.map((src, i) => (
-                      <div key={i} className="flex-shrink-0 p-1" style={{ flex: '0 0 33.3333%' }}>
+                  <div
+                    className={`flex ${isAnimating ? 'transition-transform duration-500' : ''}`}
+                    style={{ transform: `translateX(-${startIndex * (100 / visibleCount)}%)` }}
+                    onTransitionEnd={() => {
+                      // when we've reached the cloned slides (index === gallery.length), snap back to start without animation
+                      if (startIndex === gallery.length) {
+                        setIsAnimating(false)
+                        // allow DOM to update without transition then reset
+                        setTimeout(() => {
+                          setStartIndex(0)
+                          // re-enable animation on next tick
+                          setTimeout(() => setIsAnimating(true), 20)
+                        }, 20)
+                      }
+                    }}
+                  >
+                    {items.map((src, i) => (
+                      <div key={i} className="flex-shrink-0 p-1" style={{ flex: `0 0 ${100 / visibleCount}%` }}>
                         <div className="rounded-lg overflow-hidden bg-white border border-gray-200 shadow-sm flex items-center justify-center">
                           <div style={{ aspectRatio: '210 / 297', width: '100%', padding: 20, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff' }}>
                             <img src={src} alt={`result-${i}`} className="block" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: '#ffffff' }} />
@@ -328,11 +344,11 @@ export default function Home() {
                 </div>
 
                 {/* left / right arrows */}
-                <button aria-label="previous" onClick={() => setStartIndex((s) => (s > 0 ? s - 1 : Math.max(0, gallery.length - 3)))}
+                <button aria-label="previous" onClick={() => setStartIndex((s) => (s > 0 ? s - 1 : gallery.length - 1))}
                   className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 rounded-full p-2 shadow-md">
                   <CaretLeft size={20} />
                 </button>
-                <button aria-label="next" onClick={() => setStartIndex((s) => (s < Math.max(0, gallery.length - 3) ? s + 1 : 0))}
+                <button aria-label="next" onClick={() => setStartIndex((s) => s + 1)}
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 rounded-full p-2 shadow-md">
                   <CaretRight size={20} />
                 </button>
