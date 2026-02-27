@@ -105,8 +105,24 @@ export default function Home() {
   const [startIndex, setStartIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [isAnimating, setIsAnimating] = useState(true)
-  const visibleCount = 3
+  const [visibleCount, setVisibleCount] = useState(3)
   const items = [...gallery, ...gallery.slice(0, visibleCount)]
+
+  // responsive: show 1 item on small screens (<768px), 3 on larger
+  useEffect(() => {
+    const update = () => {
+      if (typeof window === 'undefined') return
+      setVisibleCount(window.innerWidth < 768 ? 1 : 3)
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
+  // when visibleCount or gallery length changes, reset index to avoid out-of-range
+  useEffect(() => {
+    setStartIndex(0)
+  }, [visibleCount, gallery.length])
 
   // auto-advance carousel every 3 seconds; pause while paused
   useEffect(() => {
