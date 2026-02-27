@@ -21,6 +21,7 @@
 
 # Media
 public/landing/*.mp4
+public/landing/*.mp4
 
 # Debug
 npm-debug.log*
