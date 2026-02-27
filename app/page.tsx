@@ -110,7 +110,7 @@ export default function Home() {
     if (isPaused) return // pause auto-scroll when user paused
     const id = setInterval(() => {
       setStartIndex((s) => (s < Math.max(0, gallery.length - 3) ? s + 1 : 0))
-    }, 3000)
+    }, 1000)
     return () => clearInterval(id)
   }, [gallery.length, isPaused])
 
