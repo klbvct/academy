@@ -44,5 +44,14 @@ a {
 
 .results-swiper .swiper-slide button {
   cursor: pointer;
+  transform: none !important;
+  transition: none !important;
+}
+
+.results-swiper .swiper-slide button:hover,
+.results-swiper .swiper-slide button:active,
+.results-swiper .swiper-slide button:focus {
+  transform: none !important;
+  outline: none;
 }
 

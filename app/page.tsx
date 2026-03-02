@@ -19,7 +19,6 @@ import {
   MapTrifold,
   ChartBar,
   ArrowRight,
-  X,
   CaretLeft,
   CaretRight,
 } from '@phosphor-icons/react'
@@ -109,7 +108,6 @@ export default function Home() {
   const swiperRef = useRef<SwiperType | null>(null)
   const resultsSectionRef = useRef<HTMLDivElement>(null)
   const [gallery] = useState<string[]>(Array.from({ length: 16 }, (_, i) => `/landing/Result_${i + 1}.webp`))
-  const [modalIndex, setModalIndex] = useState<number | null>(null)
 
   useEffect(() => {
     const t = setTimeout(() => videoRef.current?.play(), 500)
@@ -353,7 +351,7 @@ export default function Home() {
                   grabCursor
                   loop
                   modules={[EffectCards, Autoplay, Navigation]}
-                  autoplay={{ delay: 2500, disableOnInteraction: false, pauseOnMouseEnter: true, waitForTransition: true }}
+                  autoplay={{ delay: 1000, disableOnInteraction: false, pauseOnMouseEnter: true, waitForTransition: true }}
                   navigation={{
                     nextEl: '.results-next',
                     prevEl: '.results-prev',
@@ -366,22 +364,17 @@ export default function Home() {
                 >
                   {gallery.map((src, i) => (
                     <SwiperSlide key={i}>
-                      <button
-                        onClick={() => setModalIndex(i)}
-                        className="w-full focus:outline-none"
+                      <div
+                        className="rounded-xl overflow-hidden border border-blue-100 shadow-md bg-blue-50"
+                        style={{ aspectRatio: '210 / 297', padding: 16, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        <div
-                          className="rounded-xl overflow-hidden border border-blue-100 shadow-md bg-blue-50"
-                          style={{ aspectRatio: '210 / 297', padding: 16, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        >
-                          <img
-                            src={src}
-                            alt={`result-${i}`}
-                            className="block"
-                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                          />
-                        </div>
-                      </button>
+                        <img
+                          src={src}
+                          alt={`result-${i}`}
+                          className="block"
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        />
+                      </div>
                     </SwiperSlide>
                   ))}
                 </Swiper>
@@ -396,28 +389,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
-            {/* Modal viewer */}
-            {modalIndex !== null && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={() => setModalIndex(null)}>
-                <div className="relative max-w-xl w-full mx-4" onClick={(e) => e.stopPropagation()}>
-                  <button onClick={() => setModalIndex(null)} className="absolute -top-3 -right-3 bg-white rounded-full p-2 shadow-lg z-10">
-                    <X size={20} />
-                  </button>
-                  <img src={gallery[modalIndex]} alt={`full-${modalIndex}`} className="w-full object-contain rounded-lg bg-white" style={{ aspectRatio: '210/297' }} />
-                  <div className="absolute left-2 top-1/2 -translate-y-1/2">
-                    <button onClick={() => setModalIndex((v) => (v === null ? null : (v + gallery.length - 1) % gallery.length))} className="bg-white rounded-full p-2 shadow-lg">
-                      <CaretLeft size={20} />
-                    </button>
-                  </div>
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                    <button onClick={() => setModalIndex((v) => (v === null ? null : (v + 1) % gallery.length))} className="bg-white rounded-full p-2 shadow-lg">
-                      <CaretRight size={20} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </section>
 
