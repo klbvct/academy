@@ -26,6 +26,7 @@ import {
 } from '@phosphor-icons/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCards, Autoplay, Navigation } from 'swiper/modules'
+import type { Swiper as SwiperType } from 'swiper'
 import 'swiper/css'
 import 'swiper/css/effect-cards'
 import 'swiper/css/navigation'
@@ -106,12 +107,35 @@ const cls = (visible: Set<string>, id: string) =>
 export default function Home() {
   const visible = useVisible()
   const videoRef = useRef<HTMLVideoElement>(null)
+  const swiperRef = useRef<SwiperType | null>(null)
+  const resultsSectionRef = useRef<HTMLDivElement>(null)
   const [gallery] = useState<string[]>(Array.from({ length: 16 }, (_, i) => `/landing/Result_${i + 1}.webp`))
   const [modalIndex, setModalIndex] = useState<number | null>(null)
 
   useEffect(() => {
     const t = setTimeout(() => videoRef.current?.play(), 500)
     return () => clearTimeout(t)
+  }, [])
+
+  useEffect(() => {
+    const section = resultsSectionRef.current
+    if (!section) return
+    let startTimer: ReturnType<typeof setTimeout> | null = null
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        const swiper = swiperRef.current
+        if (!swiper) return
+        if (entry.isIntersecting) {
+          startTimer = setTimeout(() => swiper.autoplay.start(), 0)
+        } else {
+          if (startTimer) clearTimeout(startTimer)
+          swiper.autoplay.stop()
+        }
+      },
+      { threshold: 0.2 }
+    )
+    obs.observe(section)
+    return () => { obs.disconnect(); if (startTimer) clearTimeout(startTimer) }
   }, [])
 
   return (
@@ -296,7 +320,7 @@ export default function Home() {
         </section>
 
         {/* ── RESULTS ── */}
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-white" ref={resultsSectionRef}>
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
@@ -315,10 +339,14 @@ export default function Home() {
                   grabCursor
                   loop
                   modules={[EffectCards, Autoplay, Navigation]}
-                  autoplay={{ delay: 2500, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                  autoplay={{ delay: 2500, disableOnInteraction: false, pauseOnMouseEnter: true, waitForTransition: true }}
                   navigation={{
                     nextEl: '.results-next',
                     prevEl: '.results-prev',
+                  }}
+                  onSwiper={(swiper) => {
+                    swiperRef.current = swiper
+                    swiper.autoplay.stop()
                   }}
                   className="results-swiper"
                 >
