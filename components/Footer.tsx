@@ -24,9 +24,6 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Допомога</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white">FAQ</a></li>
-              <li><a href="#" className="hover:text-white">Умови використання</a></li>
-              <li><a href="#" className="hover:text-white">Політика приватності</a></li>
               <li><a href="/oferta" className="hover:text-white">Договір оферти</a></li>
             </ul>
           </div>
