@@ -106,7 +106,7 @@ const cls = (visible: Set<string>, id: string) =>
 export default function Home() {
   const visible = useVisible()
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [gallery] = useState<string[]>(Array(9).fill('/landing/background_hero.webp'))
+  const [gallery] = useState<string[]>(Array.from({ length: 16 }, (_, i) => `/landing/Result_${i + 1}.webp`))
   const [modalIndex, setModalIndex] = useState<number | null>(null)
 
   useEffect(() => {
