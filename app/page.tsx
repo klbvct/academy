@@ -17,7 +17,6 @@ import {
   Package,
   Brain,
   MapTrifold,
-  Video,
   ChartBar,
   ArrowRight,
   X,
@@ -306,13 +305,28 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              {/* media placeholder */}
+              {/* media: how it works video */}
               <div id="hw-media" data-reveal="" style={{ transitionDelay: '200ms' }}
                 className={`${cls(visible, 'hw-media')}`}>
-                <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white overflow-hidden aspect-[4/3] flex flex-col items-center justify-center gap-3 text-gray-400">
-                  <Video size={52} weight="thin" className="text-gray-300" />
-                  <p className="text-sm font-medium">Демо реєстрації та тестування</p>
-                  <p className="text-xs text-gray-300">GIF / відео</p>
+                <div className="relative w-full rounded-2xl overflow-hidden border border-white/80 shadow-2xl shadow-blue-100/60 bg-white/60 backdrop-blur-sm">
+                  {/* top bar */}
+                  <div className="flex items-center gap-1.5 px-4 h-9 bg-gray-100/80 border-b border-gray-200/60">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                    <div className="flex-1 mx-3 h-4 rounded-full bg-gray-200/80 flex items-center px-2">
+                      <span className="text-[9px] text-gray-400 tracking-wide truncate">education-design.com.ua/tests</span>
+                    </div>
+                  </div>
+                  <video
+                    className="w-full aspect-video object-cover block"
+                    src="/landing/roadmap-proforiientatsiine-testuvannia.mp4"
+                    muted
+                    loop
+                    playsInline
+                    autoPlay
+                    preload="auto"
+                  />
                 </div>
               </div>
             </div>
