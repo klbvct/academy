@@ -27,14 +27,22 @@ a {
 /* ── Swiper Cards Effect — Results section ── */
 .results-swiper {
   width: 260px;
-  padding-bottom: 8px !important;
+  padding-bottom: 16px !important;
+  filter: drop-shadow(0 16px 32px rgba(59, 130, 246, 0.20));
 }
 
 .results-swiper .swiper-slide {
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
+}
+
+.results-swiper .swiper-slide-active {
+  box-shadow:
+    0 8px 32px rgba(59, 130, 246, 0.24),
+    0 2px 8px rgba(59, 130, 246, 0.12);
 }
 
 .results-swiper .swiper-slide button {
   cursor: pointer;
 }
+

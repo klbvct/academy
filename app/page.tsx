@@ -329,7 +329,7 @@ export default function Home() {
                         className="w-full focus:outline-none"
                       >
                         <div
-                          className="rounded-xl overflow-hidden border border-gray-200 shadow-md bg-white"
+                          className="rounded-xl overflow-hidden border border-blue-100 shadow-md bg-blue-50"
                           style={{ aspectRatio: '210 / 297', padding: 16, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           <img
