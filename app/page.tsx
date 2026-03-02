@@ -392,6 +392,67 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── AUTHOR ── */}
+        <section className="py-24 bg-gray-50">
+          <div className="max-w-5xl mx-auto px-6">
+
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
+                Автор методики
+              </div>
+              <h2 className="font-sans text-3xl md:text-4xl font-bold text-gray-900">
+                Мар&#39;яна Калабухова
+              </h2>
+            </div>
+
+            {/* Card */}
+            <div className="rounded-3xl overflow-hidden shadow-xl border border-gray-100 bg-white grid grid-cols-1 md:grid-cols-[320px_1fr]">
+
+              {/* Left — photo + dark overlay */}
+              <div className="relative min-h-[360px] md:min-h-0">
+                <img
+                  src="/landing/mariana_about.webp"
+                  alt="Мар'яна Калабухова — автор методики"
+                  className="absolute inset-0 w-full h-full object-cover object-top"
+                />
+                {/* gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-blue-900/20 to-transparent md:bg-gradient-to-r md:from-transparent md:to-blue-900/10" />
+              </div>
+
+              {/* Right — content */}
+              <div className="p-8 md:p-12 flex flex-col justify-center gap-8">
+
+                {/* bio */}
+                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                  Автор профорієнтаційної методики <span className="font-semibold text-gray-900">Дизайн Освіти</span>, консультант з освіти за кордоном, навчання і кар&#39;єри, ментор, ступінь <span className="font-semibold text-blue-600">PhD</span>.
+                </p>
+
+                {/* stats row */}
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { num: '11+', label: 'років досвіду' },
+                    { num: '700+', label: 'консультацій' },
+                    { num: '5', label: 'років в університеті' },
+                    { num: 'PhD', label: 'науковий ступінь' },
+                  ].map(({ num, label }) => (
+                    <div key={label} className="rounded-2xl border border-gray-100 bg-gray-50 px-5 py-4">
+                      <div className="text-2xl font-bold text-blue-600 leading-none mb-1">{num}</div>
+                      <div className="text-xs text-gray-500 leading-snug">{label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* tagline */}
+                <p className="text-sm text-gray-500 leading-relaxed border-l-2 border-blue-300 pl-4 italic">
+                  11+ років досвіду підготовки і зарахування учнів і студентів в найкращі навчальні заклади світу
+                </p>
+
+              </div>
+            </div>
+
+          </div>
+        </section>
+
         {/* ── CTA ── */}
         <section className="py-24 bg-blue-600">
           <div className="max-w-3xl mx-auto px-6">
