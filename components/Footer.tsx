@@ -8,11 +8,17 @@ export default function Footer() {
             <p>Платформа для розкриття вашого потенціалу</p>
           </div>
           <div>
-            <h4 className="text-white font-semibold mb-4">Навігація</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white">Про нас</a></li>
-              <li><a href="#" className="hover:text-white">Тести</a></li>
-              <li><a href="#" className="hover:text-white">Контакти</a></li>
+            <h4 className="text-white font-semibold mb-4">Контакти</h4>
+            <ul className="space-y-2 text-sm">
+              <li className="text-white font-medium">ТОВ «ОТЦ ЄВРОПА»</li>
+              <li>Код ЄДРПОУ: 39292789</li>
+              <li>Україна, м. Запоріжжя,<br />вул. Дзержинського, оф. 84</li>
+              <li>
+                <a href="tel:+38066322301" className="hover:text-white">+38066322301</a>
+              </li>
+              <li>
+                <a href="mailto:admin@education-design.com.ua" className="hover:text-white">admin@education-design.com.ua</a>
+              </li>
             </ul>
           </div>
           <div>
