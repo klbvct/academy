@@ -21,6 +21,7 @@ export default function Footer() {
               <li><a href="#" className="hover:text-white">FAQ</a></li>
               <li><a href="#" className="hover:text-white">Умови використання</a></li>
               <li><a href="#" className="hover:text-white">Політика приватності</a></li>
+              <li><a href="/oferta" className="hover:text-white">Договір оферти</a></li>
             </ul>
           </div>
         </div>
