@@ -23,3 +23,18 @@ a {
     text-decoration: underline;
   }
 }
+
+/* ── Swiper Cards Effect — Results section ── */
+.results-swiper {
+  width: 260px;
+  padding-bottom: 8px !important;
+}
+
+.results-swiper .swiper-slide {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.results-swiper .swiper-slide button {
+  cursor: pointer;
+}
