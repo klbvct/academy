@@ -70,12 +70,20 @@ export function calculateModule7(data: Record<string, any>): Module7Scores {
     C: 0,
   }
 
-  // Обробка відповідей module7_q1, module7_q2, ..., module7_q37
+  // Обробка відповідей: підтримка форматів q1, q2, ... та module7_q1, module7_q2, ...
   Object.entries(data).forEach(([key, answer]) => {
-    if (!key.startsWith('module7_q') || !answer) return
+    if (!answer) return
 
     // Витягуємо номер питання
-    const questionNum = key.replace('module7_q', '')
+    let questionNum: string
+    if (key.startsWith('module7_q')) {
+      questionNum = key.replace('module7_q', '')
+    } else if (key.startsWith('q')) {
+      questionNum = key.replace('q', '')
+    } else {
+      return
+    }
+
     const mapping = answerMapping[questionNum]
     
     if (!mapping) return
