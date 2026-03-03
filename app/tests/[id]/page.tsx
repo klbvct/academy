@@ -190,8 +190,8 @@ export default function TestPage() {
       })
 
       if (response.ok) {
-        // Редирект на сторінку результатів — там будуть згенеровані рекомендації
-        router.push(`/tests/${testId}/results`)
+        // Редирект на дашборд — результати і рекомендації генеруються при натисканні "Переглянути результати"
+        router.push('/dashboard')
       } else {
         setError('Помилка при завершенні тесту')
         setCompleting(false)
@@ -346,7 +346,7 @@ export default function TestPage() {
             </button>
             {completing && (
               <p className="text-sm text-gray-500 text-center">
-                Генеруємо ваші персональні рекомендації, зачекайте...
+                Зберігаємо ваші відповіді...
               </p>
             )}
           </div>
