@@ -56,7 +56,7 @@
 - orderId: уникальный ID заказа
 - amount: сумма
 - currency: валюта (по умолчанию "UAH")
-- type: тип платежа ("access" — доступ к тесту, "results" — доступ к результатам)
+- type: тип платежа ("access" — доступ к тесту)
 - status: статус ("pending" | "success" | "failed")
 - liqpayTransactionId: ID транзакции LiqPay
 - description: описание платежа
