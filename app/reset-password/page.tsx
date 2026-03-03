@@ -96,7 +96,7 @@ export default function ResetPasswordPage() {
           router.push('/dashboard')
         }, 2000)
       } else {
-        setPasswordError(data.message || 'Ошибка при изменении пароля')
+        setPasswordError(data.message || 'Помилка при зміні пароля')
       }
     } catch (err) {
       setPasswordError('Помилка підключення до сервера')
@@ -154,7 +154,7 @@ export default function ResetPasswordPage() {
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Готово!</h1>
             <p className="text-gray-600 mb-4">
-              Ваш пароль успішно змінен.
+              Ваш пароль успішно змінено.
             </p>
             <p className="text-gray-600 text-sm">
               Ви будете перенаправлені в кабінет...

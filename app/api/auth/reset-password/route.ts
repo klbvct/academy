@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: 'Пароль успішно змінен',
+        message: 'Пароль успішно змінено',
         token: jwtToken,
         user: {
           id: updatedUser.id,
