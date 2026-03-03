@@ -38,8 +38,6 @@ export async function GET(request: NextRequest) {
           },
           select: {
             completedAt: true,
-            scores: true,
-            recommendations: true,
           },
         },
         access: {
@@ -53,43 +51,13 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    // Получаем платежи для результатов
-    const payments = await prisma.payment.findMany({
-      where: {
-        userId: decoded.userId,
-        type: 'results',
-      },
-      select: {
-        id: true,
-        testId: true,
-        status: true,
-      },
-    })
-
     // Форматируем ответ
     const formattedTests = tests.map(test => {
       const testResult = test.results[0]
       const isCompleted = testResult?.completedAt !== null && testResult?.completedAt !== undefined
-      const resultsPaid = isCompleted && payments.some(p => p.testId === test.id && p.status === 'success')
-      const hasAccess = test.access[0]?.hasAccess ?? true // По умолчанию доступ есть
-      
-      // Получаем scores и recommendations для завершенных тестов
-      let scores = null
-      let recommendations = null
-      
-      if (isCompleted && resultsPaid && testResult) {
-        // Парсим scores если они есть
-        if (testResult.scores) {
-          try {
-            scores = JSON.parse(testResult.scores)
-          } catch (e) {
-            scores = null
-          }
-        }
-        // Рекомендации уже строка
-        recommendations = testResult.recommendations
-      }
-      
+      // resultsPaid больше не нужен — результаты доступны бесплатно после прохождения
+      const hasAccess = test.access[0]?.hasAccess ?? false // Без оплаты доступа нет
+
       return {
         id: test.id,
         title: test.title,
@@ -99,10 +67,10 @@ export async function GET(request: NextRequest) {
         questionsCount: test.questionsCount,
         hasAccess: hasAccess,
         isCompleted: isCompleted,
-        resultsPaid: resultsPaid,
+        resultsPaid: isCompleted, // результаты доступны всем кто завершил тест
         completedAt: testResult?.completedAt,
-        scores: scores,
-        recommendations: recommendations,
+        scores: null,        // не передаём в dashboard — лишние данные
+        recommendations: null,
       }
     })
 

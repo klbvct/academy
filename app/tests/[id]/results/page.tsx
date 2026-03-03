@@ -36,7 +36,6 @@ export default function ResultsPage() {
 
   const [results, setResults] = useState<TestResults | null>(null)
   const [userData, setUserData] = useState<UserData | null>(null)
-  const [isResultsPaid, setIsResultsPaid] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
@@ -46,8 +45,8 @@ export default function ResultsPage() {
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    // Only enable scroll-based visibility after results are loaded and access is granted
-    if (!results || !isResultsPaid || isGeneratingPDF) {
+    // Only enable scroll-based visibility after results are loaded
+    if (!results || isGeneratingPDF) {
       setShowButton(false)
       return
     }
@@ -86,7 +85,7 @@ export default function ResultsPage() {
         clearTimeout(scrollTimeoutRef.current)
       }
     }
-  }, [results, isResultsPaid, isGeneratingPDF])
+  }, [results, isGeneratingPDF])
 
   // Helper function to generate recommendations
   const generateRecommendations = async (id: string): Promise<any> => {
@@ -140,12 +139,32 @@ export default function ResultsPage() {
 
         setProgressPercent(40)
         const data = await response.json()
-        setIsResultsPaid(data.isResultsPaid)
         setUserData(data.user)
 
         setProgressPercent(60)
-        // If results are paid and recommendations don't exist, auto-generate them before showing page
-        if (data.isResultsPaid && !data.data.recommendations) {
+
+        // Перевіряємо чи потрібна генерація рекомендацій:
+        // 1. Рекомендації відсутні (null/empty)
+        // 2. Або це заглушка з помилкою (стара логіка)
+        const hasValidRecommendations = (() => {
+          const rec = data.data.recommendations
+          if (!rec) return false
+          try {
+            const parsed = JSON.parse(rec)
+            // Перевіряємо що це об'єкт з полем text і текст не є заглушкою
+            if (typeof parsed === 'object' && parsed.text) {
+              return !parsed.text.includes('Не вдалося отримати')
+            }
+            // Якщо це просто рядок — теж заглушка
+            return false
+          } catch {
+            // Якщо не JSON — стара заглушка
+            return false
+          }
+        })()
+
+        // If valid recommendations don't exist — auto-generate
+        if (!hasValidRecommendations) {
           console.log('Auto-generating recommendations before showing results...')
           try {
             setProgressPercent(75)
@@ -155,11 +174,9 @@ export default function ResultsPage() {
               console.log('Recommendations auto-generated successfully')
             } else {
               console.warn('Auto-generation failed, user can manually trigger it later')
-              // Still show the page, just without recommendations
             }
           } catch (err) {
             console.error('Error during auto-generation:', err)
-            // Continue to show page without recommendations
           }
         }
 
@@ -273,7 +290,14 @@ export default function ResultsPage() {
         <div className="text-center w-full max-w-md px-4">
           <div className="mb-6">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <p className="text-gray-600 mb-6">Завантаження результатів тестування...</p>
+            <p className="text-gray-600 mb-2">
+              {progressPercent >= 60 && progressPercent < 95
+                ? 'Генеруємо персональні рекомендації за допомогою AI...'
+                : 'Завантаження результатів тестування...'}
+            </p>
+            {progressPercent >= 60 && progressPercent < 95 && (
+              <p className="text-xs text-gray-400 mb-4">Це може зайняти до 30 секунд</p>
+            )}
           </div>
           
           {/* Progress bar for initial loading */}

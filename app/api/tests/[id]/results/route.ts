@@ -36,12 +36,8 @@ export async function GET(
       return NextResponse.json({ error: 'Test result not found' }, { status: 404 })
     }
 
-    // Результаты доступны бесплатно после прохождения теста
-    const isResultsPaid = true
-
     return NextResponse.json({
       success: true,
-      isResultsPaid: isResultsPaid,
       user: {
         name: testResult.user?.fullName || 'Користувач',
         birthdate: testResult.user?.birthDate || null,

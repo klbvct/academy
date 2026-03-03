@@ -26,6 +26,7 @@ export default function TestPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [completing, setCompleting] = useState(false)
   const [progressLoaded, setProgressLoaded] = useState(false)
 
   // Загрузить прогресс теста при инициализации
@@ -165,43 +166,41 @@ export default function TestPage() {
   }
 
   const handleCompleteTest = async () => {
-    setSaving(true)
-    await executeWithLoading(async () => {
-      try {
-        const token = localStorage.getItem('token')
+    setCompleting(true)
+    try {
+      const token = localStorage.getItem('token')
 
-        // Зберегти финальні відповіді
-        const saved = await saveAnswers()
-        
-        if (!saved) {
-          setError('Помилка при збереженні відповідей модуля 8')
-          return
-        }
+      // Зберегти фінальні відповіді
+      const saved = await saveAnswers()
 
-        // Завершить тест
-        const response = await fetch(`/api/tests/${testId}/complete`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            answers,
-          }),
-        })
-
-        if (response.ok) {
-          router.push('/dashboard')
-        } else {
-          setError('Помилка при завершенні тесту')
-        }
-      } catch (err) {
-        console.error('Error completing test:', err)
-        setError('Помилка при завершенні тесту')
-      } finally {
-        setSaving(false)
+      if (!saved) {
+        setError('Помилка при збереженні відповідей модуля 8')
+        setCompleting(false)
+        return
       }
-    })
+
+      // Завершити тест
+      const response = await fetch(`/api/tests/${testId}/complete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ answers }),
+      })
+
+      if (response.ok) {
+        // Редирект на сторінку результатів — там будуть згенеровані рекомендації
+        router.push(`/tests/${testId}/results`)
+      } else {
+        setError('Помилка при завершенні тесту')
+        setCompleting(false)
+      }
+    } catch (err) {
+      console.error('Error completing test:', err)
+      setError('Помилка при завершенні тесту')
+      setCompleting(false)
+    }
   }
 
   if (loading) {
@@ -312,17 +311,44 @@ export default function TestPage() {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-center mb-8">
+          <div className="flex flex-col items-center gap-3 mb-8">
             <button
               type="submit"
-              disabled={saving}
-              className="px-8 py-3 text-white rounded-lg font-semibold transition-all hover:shadow-lg disabled:opacity-50"
+              disabled={saving || completing}
+              className="px-8 py-3 text-white rounded-lg font-semibold transition-all hover:shadow-lg disabled:opacity-70 flex items-center gap-2"
               style={{
-                background: 'linear-gradient(135deg, #0c68f5 0%, #764ba2 100%)'
+                background: 'linear-gradient(135deg, #0c68f5 0%, #764ba2 100%)',
+                minWidth: '200px',
+                justifyContent: 'center',
               }}
             >
-              {saving ? 'Завантаження...' : currentModule === 8 ? 'Завершити тест' : 'Далі'}
+              {completing ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  <span>Завершення тесту...</span>
+                </>
+              ) : saving ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  <span>Збереження...</span>
+                </>
+              ) : currentModule === 8 ? (
+                <span>Завершити тест</span>
+              ) : (
+                <span>Далі</span>
+              )}
             </button>
+            {completing && (
+              <p className="text-sm text-gray-500 text-center">
+                Генеруємо ваші персональні рекомендації, зачекайте...
+              </p>
+            )}
           </div>
         </form>
       </div>

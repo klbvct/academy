@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken, getTokenFromHeader } from '@/lib/jwt'
-import { generateCareerRecommendations } from '@/lib/gemini'
 import {
   calculateModule1,
   calculateModule2,
@@ -51,13 +50,6 @@ export async function POST(
         userId,
         testId,
       },
-      include: {
-        user: {
-          select: {
-            fullName: true,
-          },
-        },
-      },
     })
 
     if (!testResult) {
@@ -68,17 +60,24 @@ export async function POST(
     const data = JSON.parse(testResult.data || '{}')
     const scores = calculateScores(data)
 
-    // Отримати AI рекомендації від Gemini
-    let recommendation = ''
-    try {
-      const recommendationObj = await generateCareerRecommendations(scores, testResult.user?.fullName)
-      recommendation = JSON.stringify(recommendationObj) // зберігається як {"text":"..."}
-    } catch (err) {
-      console.error('Error getting Gemini recommendation:', err)
-      recommendation = JSON.stringify({ text: 'Не вдалося отримати рекомендацію' })
+    // Зберегти scores та позначити тест як завершений
+    // Рекомендації будуть згенеровані при першому відкритті сторінки результатів
+    // Очищаємо тільки невалідні рекомендації (заглушки з помилкою)
+    const existingRec = testResult.recommendations
+    let recToSave: string | null = existingRec
+    if (!existingRec) {
+      recToSave = null
+    } else {
+      try {
+        const parsed = JSON.parse(existingRec)
+        const isValid = typeof parsed === 'object' && parsed.text &&
+          !parsed.text.includes('Не вдалося отримати')
+        if (!isValid) recToSave = null
+      } catch {
+        recToSave = null // не валідний JSON — скидаємо
+      }
     }
 
-    // Оновити результат тесту
     const updatedResult = await prisma.testResult.update({
       where: {
         id: testResult.id,
@@ -86,7 +85,7 @@ export async function POST(
       data: {
         scores: JSON.stringify(scores),
         completedAt: new Date(),
-        recommendations: recommendation,
+        recommendations: recToSave,
       },
     })
 
