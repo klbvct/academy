@@ -76,7 +76,7 @@ export default function LoginPage() {
 
         if (response.ok && data.success) {
           setForgotSuccess(true)
-          setForgotMessage(data.message || 'Письмо з посиланням на сброс пароля надіслано на вашу email-адресу.')
+          setForgotMessage(data.message || 'Лист із посиланням для відновлення пароля надіслано на вашу email-адресу.')
           setForgotEmail('')
         } else {
           setForgotError(data.message || 'Сталася помилка. Спробуйте ще раз.')
