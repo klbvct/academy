@@ -1,13 +1,13 @@
 import { Question } from '../types'
 
-interface Module6SchwatzProps {
+interface Module6SchwartzProps {
   questions: Question[]
   answers: Record<string, string>
   onAnswerChange: (questionNumber: number, value: string) => void
   scale?: string[]
 }
 
-export function Module6Schwartz({ questions, answers, onAnswerChange, scale }: Module6SchwatzProps) {
+export function Module6Schwartz({ questions, answers, onAnswerChange, scale }: Module6SchwartzProps) {
   const scaleValues = scale || ['-1', '0', '1', '2', '3', '4', '5', '6', '7']
 
   return (
