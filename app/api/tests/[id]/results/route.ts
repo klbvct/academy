@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken, getTokenFromHeader } from '@/lib/jwt'
+import { verifyTokenAndUser, getTokenFromHeader } from '@/lib/jwt'
 
 export async function GET(
   request: NextRequest,
@@ -14,13 +14,22 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const decoded = verifyToken(token)
-    if (!decoded) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
+    const user = await verifyTokenAndUser(token)
+    if (!user) {
+      return NextResponse.json({ error: 'Invalid token or account blocked' }, { status: 401 })
     }
 
-    const userId = decoded.userId
+    const userId = user.id
     const testId = parseInt(params.id)
+
+    // Перевіряємо що користувач має доступ і завершив тест
+    const testAccess = await prisma.testAccess.findFirst({
+      where: { userId, testId },
+    })
+
+    if (!testAccess || !testAccess.hasAccess) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 })
+    }
 
     const testResult = await prisma.testResult.findFirst({
       where: {

@@ -49,6 +49,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Захист від replay: якщо платіж вже успішно оброблено — ігноруємо повтор
+    if (payment.status === 'success') {
+      console.warn(`Replay attempt for already processed payment: ${callbackData.order_id}`)
+      return NextResponse.json({ success: true, status: 'success' })
+    }
+
     // Обновляем статус платежа на основе ответа LiqPay
     let newStatus = 'pending'
     

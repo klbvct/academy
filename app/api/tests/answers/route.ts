@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken, getTokenFromHeader } from '@/lib/jwt'
+import { verifyTokenAndUser, getTokenFromHeader } from '@/lib/jwt'
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,12 +11,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const decoded = verifyToken(token)
-    if (!decoded) {
+    const user = await verifyTokenAndUser(token)
+    if (!user) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
-    const userId = decoded.userId
+    const userId = user.id
     const { testId, module, answers } = await request.json()
 
     // Перевірити, чи користувач має доступ до цього тесту

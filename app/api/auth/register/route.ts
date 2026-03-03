@@ -2,8 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { generateToken } from '@/lib/jwt'
 import bcrypt from 'bcryptjs'
+import { rateLimit } from '@/lib/rateLimit'
 
 export async function POST(request: NextRequest) {
+  // 5 реєстрацій за 10 хвилин з одного IP
+  const rl = rateLimit(request, { limit: 5, windowMs: 10 * 60_000 })
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, message: 'Забагато спроб. Спробуйте через 10 хвилин.' },
+      { status: 429 }
+    )
+  }
+
   try {
     const { fullName, email, password, birthDate, phone } = await request.json()
 

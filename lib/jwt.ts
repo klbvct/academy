@@ -1,6 +1,11 @@
 import jwt from 'jsonwebtoken'
+import { prisma } from '@/lib/prisma'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is not set. Please add it to your .env file.')
+}
+
+const JWT_SECRET = process.env.JWT_SECRET as string
 
 export interface DecodedToken {
   userId: number
@@ -45,4 +50,23 @@ export function getTokenFromHeader(authHeader: string | null): string | null {
   }
   
   return parts[1]
+}
+
+/**
+ * Перевіряє токен і повертає користувача з БД.
+ * Гарантує що користувач існує і не заблокований (isActive).
+ * Використовуйте для ендпоінтів де потрібна актуальна перевірка статусу.
+ */
+export async function verifyTokenAndUser(token: string) {
+  const decoded = verifyToken(token)
+  if (!decoded) return null
+
+  const user = await prisma.user.findUnique({
+    where: { id: decoded.userId },
+    select: { id: true, email: true, role: true, isActive: true },
+  })
+
+  if (!user || !user.isActive) return null
+
+  return user
 }

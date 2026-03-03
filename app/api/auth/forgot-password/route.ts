@@ -2,8 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { sendPasswordResetEmail } from '@/lib/email'
+import { rateLimit } from '@/lib/rateLimit'
 
 export async function POST(request: NextRequest) {
+  // 3 запити за 15 хвилин з одного IP — захист від email спаму
+  const rl = rateLimit(request, { limit: 3, windowMs: 15 * 60_000 })
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, message: 'Забагато спроб. Спробуйте через 15 хвилин.' },
+      { status: 429 }
+    )
+  }
+
   try {
     const body = await request.json()
     const { email } = body
