@@ -416,7 +416,7 @@ export default function Home() {
                   className="absolute inset-0 w-full h-full object-cover object-top"
                 />
                 {/* gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-blue-900/20 to-transparent md:bg-gradient-to-r md:from-transparent md:to-blue-900/10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent md:bg-gradient-to-r md:from-transparent md:to-blue-900/10" />
               </div>
 
               {/* Right — content */}
@@ -432,7 +432,7 @@ export default function Home() {
                   {[
                     { num: '11+', label: 'років досвіду' },
                     { num: '700+', label: 'консультацій' },
-                    { num: '5', label: 'років в університеті' },
+                    { num: '8', label: 'років в університеті' },
                     { num: 'PhD', label: 'науковий ступінь' },
                   ].map(({ num, label }) => (
                     <div key={label} className="rounded-2xl border border-gray-100 bg-gray-50 px-5 py-4">
