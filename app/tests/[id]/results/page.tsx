@@ -292,7 +292,7 @@ export default function ResultsPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
             <p className="text-gray-600 mb-2">
               {progressPercent >= 60 && progressPercent < 95
-                ? 'Генеруємо персональні рекомендації за допомогою AI...'
+                ? 'Генеруємо персональні рекомендації...'
                 : 'Завантаження результатів тестування...'}
             </p>
             {progressPercent >= 60 && progressPercent < 95 && (
@@ -786,30 +786,53 @@ export default function ResultsPage() {
 }
 
 // ========== HELPER: Format AI-generated recommendations with styling ==========
+
+// Парсит **жирный** текст внутри строки и возвращает React-узлы
+function parseInlineBold(text: string, keyPrefix: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g)
+  if (parts.length === 1) return text
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={`${keyPrefix}-b${i}`}>{part.slice(2, -2)}</strong>
+        }
+        return part
+      })}
+    </>
+  )
+}
+
 function formatRecommendationsText(text: string): React.ReactNode {
   const lines = text.split('\n')
   const elements: React.ReactNode[] = []
-  
+
   lines.forEach((line, idx) => {
     const trimmed = line.trim()
-    
-    // Пропускаем пустые строки
+
+    // Пустая строка
     if (trimmed === '') {
       elements.push(<div key={`empty-${idx}`} style={{ height: '8px' }} />)
       return
     }
-    
-    // Секции: "1. Пріоритетні..." или "2. Альтернативні..." или просто "Пріоритетні професійні напрямки"
-    if (trimmed.match(/^[12]\.\s+/) || trimmed.match(/професійні напрямки/i)) {
-      const sectionText = trimmed.replace(/^[12]\.\s+/, '')
+
+    // Снимаем обёртку ** вокруг всей строки: **Напрямок 1: ...** или **2. Альтернативні...**
+    const unwrapped = trimmed.replace(/^\*\*(.+)\*\*$/, '$1')
+
+    // Секции: "1. Пріоритетні..." / "2. Альтернативні..." / "Пріоритетні професійні напрямки"
+    if (unwrapped.match(/^[12]\.\s+/) || unwrapped.match(/професійні напрямки/i)) {
+      const sectionText = unwrapped.replace(/^[12]\.\s+/, '')
       elements.push(
-        <h2 
-          key={`header-${idx}`} 
-          className="text-2xl font-bold mb-4 pb-2" 
-          style={{ 
-            color: '#1e3a8a', 
+        <h2
+          key={`header-${idx}`}
+          style={{
+            fontSize: '18px',
+            fontWeight: 'bold',
+            color: '#1e3a8a',
             borderBottom: '2px solid #0c68f5',
-            marginTop: idx > 0 ? '30px' : '0'
+            paddingBottom: '8px',
+            marginTop: idx > 0 ? '30px' : '0',
+            marginBottom: '16px',
           }}
         >
           {sectionText}
@@ -817,79 +840,107 @@ function formatRecommendationsText(text: string): React.ReactNode {
       )
       return
     }
-    
-    // Напрямок X: - выделенные подзаголовки направлений
-    if (trimmed.match(/^Напрямок \d+:/)) {
+
+    // Напрямок X: ... (заголовок направления)
+    if (unwrapped.match(/^Напрямок \d+:/)) {
       elements.push(
-        <div 
-          key={`direction-${idx}`} 
-          style={{ 
-            marginTop: '20px', 
+        <div
+          key={`direction-${idx}`}
+          style={{
+            marginTop: '24px',
             marginBottom: '10px',
             fontSize: '15px',
             fontWeight: 'bold',
-            color: '#1e3a8a'
+            color: '#1e3a8a',
           }}
         >
-          {trimmed}
+          {parseInlineBold(unwrapped, `dir-${idx}`)}
         </div>
       )
       return
     }
-    
-    // Можливі посади та кар'єрний розвиток: - подсекция
-    if (trimmed.match(/^Можливі посади/)) {
-      const colonIndex = trimmed.indexOf(':')
-      if (colonIndex !== -1) {
-        const header = trimmed.substring(0, colonIndex + 1) // включая двоеточие
-        const content = trimmed.substring(colonIndex + 1).trim() // текст после двоеточия
-        
+
+    // Пункт списка: * текст или * **Заголовок:** описание
+    if (trimmed.startsWith('* ')) {
+      const content = trimmed.slice(2).trim()
+      // Проверяем "* **Заголовок:** описание"
+      const boldLabelMatch = content.match(/^\*\*([^*]+)\*\*[:：]?\s*(.*)$/)
+      if (boldLabelMatch) {
+        const label = boldLabelMatch[1]
+        const rest = boldLabelMatch[2]
+        const cleanLabel = label.replace(/:$/, '')
+        // "Можливі посади..." — подзаголовок синим
+        const isSubheading = /можливі посади/i.test(cleanLabel)
+        // "Чому цей напрямок..." — обычный текст без выделения
+        const isPlainText = /чому цей напрямок/i.test(cleanLabel)
+        if (isPlainText) {
+          elements.push(
+            <p
+              key={`bullet-${idx}`}
+              style={{
+                fontSize: '14px',
+                color: '#000000',
+                lineHeight: '1.7',
+                marginBottom: '10px',
+                marginTop: '0',
+              }}
+            >
+              {cleanLabel}:
+              {rest && <span> {parseInlineBold(rest, `bl-rest-${idx}`)}</span>}
+            </p>
+          )
+          return
+        }
         elements.push(
-          <div 
-            key={`positions-${idx}`} 
-            style={{ 
+          <div
+            key={`bullet-${idx}`}
+            style={{
+              marginBottom: isSubheading ? '6px' : '8px',
+              marginTop: isSubheading ? '12px' : '0',
+              paddingLeft: isSubheading ? '0' : '12px',
               fontSize: '14px',
-              marginTop: '10px',
-              marginBottom: '6px'
+              lineHeight: '1.7',
+              color: '#000000',
             }}
           >
-            <span style={{ fontWeight: '500', color: '#1e3a8a' }}>{header}</span>
-            {content && <span style={{ fontWeight: 'normal', color: '#000000' }}> {content}</span>}
+            <span>
+              <strong style={{ color: isSubheading ? '#1e3a8a' : '#000000' }}>{cleanLabel}:</strong>
+              {rest && <span> {parseInlineBold(rest, `bl-rest-${idx}`)}</span>}
+            </span>
           </div>
         )
       } else {
-        // если нет двоеточия, рендерим весь текст синим
         elements.push(
-          <div 
-            key={`positions-${idx}`} 
-            style={{ 
+          <div
+            key={`bullet-${idx}`}
+            style={{
+              marginBottom: '8px',
+              paddingLeft: '12px',
               fontSize: '14px',
-              fontWeight: 'bold',
-              marginTop: '10px',
-              marginBottom: '6px',
-              color: '#1e3a8a'
+              lineHeight: '1.7',
+              color: '#000000',
             }}
           >
-            {trimmed}
+            <span>{parseInlineBold(content, `bl-${idx}`)}</span>
           </div>
         )
       }
       return
     }
-    
+
     // Обычный текст
     elements.push(
-      <p 
-        key={`text-${idx}`} 
-        style={{ 
+      <p
+        key={`text-${idx}`}
+        style={{
           fontSize: '14px',
           color: '#000000',
           lineHeight: '1.7',
           marginBottom: '10px',
-          marginTop: '0'
+          marginTop: '0',
         }}
       >
-        {trimmed}
+        {parseInlineBold(trimmed, `p-${idx}`)}
       </p>
     )
   })
