@@ -210,7 +210,7 @@ export default function Home() {
                       ref={videoRef}
                       className="w-full aspect-video object-cover block"
                       src="/landing/proforiientatsiine-testuvannia.mp4"
-                      poster="/landing/background_hero.webp"
+                      poster="/landing/Result_1.webp"
                       muted
                       loop
                       playsInline
