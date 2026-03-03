@@ -105,7 +105,7 @@ export default function DashboardPage() {
           router.push('/login')
         }
       } catch (err) {
-        setError('Помилка при загруженні даних')
+        setError('Помилка при завантаженні даних')
         console.error(err)
       } finally {
         setLoading(false)
@@ -271,6 +271,7 @@ export default function DashboardPage() {
                               await executeWithLoading(async () => {
                                 router.push(`/tests/${test.id}`)
                               })
+                              setLoadingResults(null)
                             }}
                             disabled={loadingResults === test.id}
                             className="w-full rounded-lg py-2 transition font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
