@@ -59,7 +59,7 @@ export default function AdminLayout({
   if (!isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <p className="text-red-600">Доступ запрещен</p>
+        <p className="text-red-600">Доступ заборонено</p>
       </div>
     )
   }

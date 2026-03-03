@@ -31,9 +31,10 @@ export async function GET(
       where: { id: decoded.userId },
     })
 
+    // GET: перевіряємо адміна
     if (!admin || admin.role !== 'admin') {
       return NextResponse.json(
-        { success: false, message: 'Доступ запрещен' },
+        { success: false, message: 'Доступ заборонено' },
         { status: 403 }
       )
     }
@@ -41,7 +42,7 @@ export async function GET(
     // Проверяем, не заблокирован ли администратор
     if (!admin.isActive) {
       return NextResponse.json(
-        { success: false, message: 'Ваш акаунт заблокирован' },
+        { success: false, message: 'Ваш акаунт заблокований' },
         { status: 403 }
       )
     }
@@ -110,7 +111,7 @@ export async function PATCH(
 
     if (!admin || admin.role !== 'admin') {
       return NextResponse.json(
-        { success: false, message: 'Доступ запрещен' },
+        { success: false, message: 'Доступ заборонено' },
         { status: 403 }
       )
     }
@@ -118,7 +119,7 @@ export async function PATCH(
     // Проверяем, не заблокирован ли администратор
     if (!admin.isActive) {
       return NextResponse.json(
-        { success: false, message: 'Ваш акаунт заблокирован' },
+        { success: false, message: 'Ваш акаунт заблокований' },
         { status: 403 }
       )
     }

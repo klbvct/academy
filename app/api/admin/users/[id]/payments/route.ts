@@ -43,7 +43,7 @@ export async function GET(
 
     if (!admin.isActive) {
       return NextResponse.json(
-        { success: false, message: 'Ваш акаунт заблокирован' },
+        { success: false, message: 'Ваш акаунт заблокований' },
         { status: 403 }
       )
     }
@@ -166,7 +166,7 @@ export async function PATCH(
 
     if (!admin || !admin.isActive) {
       return NextResponse.json(
-        { success: false, message: 'Доступ запрещен' },
+        { success: false, message: 'Доступ заборонено' },
         { status: 403 }
       )
     }

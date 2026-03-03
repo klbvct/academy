@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
     if (!user || user.role !== 'admin') {
       return NextResponse.json(
-        { success: false, message: 'Доступ запрещен' },
+        { success: false, message: 'Доступ заборонено' },
         { status: 403 }
       )
     }
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     // Проверяем, не заблокирован ли администратор
     if (!user.isActive) {
       return NextResponse.json(
-        { success: false, message: 'Ваш акаунт заблокирован' },
+        { success: false, message: 'Ваш акаунт заблокований' },
         { status: 403 }
       )
     }

@@ -11,19 +11,19 @@ export async function POST(
     const token = getTokenFromHeader(authHeader)
 
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: 'Не авторизовано' }, { status: 401 })
     }
 
     const decoded = verifyToken(token)
     if (!decoded || decoded.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return NextResponse.json({ error: 'Доступ заборонено' }, { status: 403 })
     }
 
     const userId = parseInt(params.id)
     const { testId } = await request.json()
 
     if (!testId) {
-      return NextResponse.json({ error: 'testId is required' }, { status: 400 })
+      return NextResponse.json({ error: 'testId є обов\'язковим' }, { status: 400 })
     }
 
     // Удаляем результаты теста
@@ -62,7 +62,7 @@ export async function POST(
   } catch (error) {
     console.error('Error resetting test:', error)
     return NextResponse.json(
-      { error: 'Failed to reset test' },
+      { error: 'Помилка при скиданні тесту' },
       { status: 500 }
     )
   }

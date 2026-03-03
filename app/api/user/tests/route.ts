@@ -67,9 +67,8 @@ export async function GET(request: NextRequest) {
         questionsCount: test.questionsCount,
         hasAccess: hasAccess,
         isCompleted: isCompleted,
-        resultsPaid: isCompleted, // результаты доступны всем кто завершил тест
         completedAt: testResult?.completedAt,
-        scores: null,        // не передаём в dashboard — лишние данные
+        scores: null,        // не передаємо в dashboard — зайві дані
         recommendations: null,
       }
     })

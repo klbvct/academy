@@ -523,7 +523,7 @@ export default function UserDetailPage() {
 
                   {resetSuccess && (
                     <div className="bg-green-50 text-green-700 p-2 rounded text-xs mb-3">
-                      ✓ Результаты сброшены
+                      ✓ Результати скинуто
                     </div>
                   )}
 
