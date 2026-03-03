@@ -25,10 +25,24 @@ interface TestScores {
   // Module 2: Interests
   m2_naturalScience?: number
   m2_engineering?: number
+  m2_robotics?: number
+  m2_physics?: number
+  m2_mathematics?: number
+  m2_it?: number
+  m2_business?: number
   m2_humanities?: number
+  m2_journalism?: number
+  m2_social?: number
+  m2_creative?: number
+  m2_education?: number
+  m2_law?: number
+  m2_medicine?: number
   m2_art?: number
+  m2_hospitality?: number
+  m2_agriculture?: number
+  m2_construction?: number
+  m2_transport?: number
   m2_sports?: number
-  m2_economics?: number
 
   // Module 3: Thinking Types
   m3_artistic?: number
@@ -110,12 +124,34 @@ function buildAnalysisPrompt(scores: TestScores): string {
   // Module 2: Interests
   if (scores.m2_naturalScience || scores.m2_engineering || scores.m2_humanities) {
     analysis.push(`\nІНТЕРЕСИ ТА ЗДІБНОСТІ (Модуль 2):`)
-    if (scores.m2_naturalScience) analysis.push(`- Природничі науки: ${scores.m2_naturalScience}%`)
-    if (scores.m2_engineering) analysis.push(`- Інженерія та технології: ${scores.m2_engineering}%`)
-    if (scores.m2_humanities) analysis.push(`- Гуманітарні науки: ${scores.m2_humanities}%`)
-    if (scores.m2_art) analysis.push(`- Мистецтво: ${scores.m2_art}%`)
-    if (scores.m2_sports) analysis.push(`- Спорт: ${scores.m2_sports}%`)
-    if (scores.m2_economics) analysis.push(`- Економіка та бізнес: ${scores.m2_economics}%`)
+    const m2Fields: [keyof TestScores, string][] = [
+      ['m2_naturalScience', 'Природничі науки і Екологія'],
+      ['m2_engineering',    'Інженерія та технології'],
+      ['m2_robotics',       'Робототехніка, мехатроніка'],
+      ['m2_physics',        'Фізика і астрофізика'],
+      ['m2_mathematics',    'Математика і статистика'],
+      ['m2_it',             'Інформаційні технології'],
+      ['m2_business',       'Бізнес, менеджмент та економіка'],
+      ['m2_humanities',     'Гуманітарні науки'],
+      ['m2_journalism',     'Журналістика, медіа, маркетинг'],
+      ['m2_social',         'Соціальні науки'],
+      ['m2_creative',       'Креативні індустрії та дизайн'],
+      ['m2_education',      'Освіта та педагогіка'],
+      ['m2_law',            'Право та державне управління'],
+      ['m2_medicine',       'Медицина та здоров\'я'],
+      ['m2_art',            'Мистецтво'],
+      ['m2_hospitality',    'Готельно-ресторанна справа та туризм'],
+      ['m2_agriculture',    'Аграрні науки, FoodTech'],
+      ['m2_construction',   'Будівництво та архітектура'],
+      ['m2_transport',      'Транспортні технології і логістика'],
+      ['m2_sports',         'Спорт та реабілітація'],
+    ]
+    // Показываем только сферы где балл > 0, сортируем по убыванию
+    const m2Sorted = m2Fields
+      .map(([key, label]) => ({ label, value: (scores[key] as number) || 0 }))
+      .filter(({ value }) => value > 0)
+      .sort((a, b) => b.value - a.value)
+    m2Sorted.forEach(({ label, value }) => analysis.push(`- ${label}: ${value}%`))
   }
 
   // Module 3: Thinking Types
