@@ -180,3 +180,73 @@ export async function PATCH(
     )
   }
 }
+
+// DELETE - видалити користувача
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const authHeader = request.headers.get('authorization')
+    const token = getTokenFromHeader(authHeader)
+
+    if (!token) {
+      return NextResponse.json(
+        { success: false, message: 'Не авторизовано' },
+        { status: 401 }
+      )
+    }
+
+    const decoded = verifyToken(token)
+    if (!decoded) {
+      return NextResponse.json(
+        { success: false, message: 'Невалідний токен' },
+        { status: 401 }
+      )
+    }
+
+    const admin = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+    })
+
+    if (!admin || admin.role !== 'admin') {
+      return NextResponse.json(
+        { success: false, message: 'Доступ заборонено' },
+        { status: 403 }
+      )
+    }
+
+    const userId = parseInt(params.id)
+
+    // Не дозволяємо видаляти самого себе
+    if (userId === decoded.userId) {
+      return NextResponse.json(
+        { success: false, message: 'Не можна видалити власний акаунт' },
+        { status: 400 }
+      )
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } })
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: 'Користувач не знайдений' },
+        { status: 404 }
+      )
+    }
+
+    // Видаляємо користувача — завдяки onDelete: Cascade у схемі
+    // автоматично видаляться: Payment, TestAccess, TestResult
+    await prisma.user.delete({ where: { id: userId } })
+
+    return NextResponse.json(
+      { success: true, message: 'Користувач успішно видалений' },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error('Delete user error:', error)
+    return NextResponse.json(
+      { success: false, message: 'Помилка на сервері' },
+      { status: 500 }
+    )
+  }
+}

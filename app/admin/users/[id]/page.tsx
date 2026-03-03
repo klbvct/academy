@@ -46,6 +46,10 @@ export default function UserDetailPage() {
   const [resetError, setResetError] = useState('')
   const [resetSuccess, setResetSuccess] = useState(false)
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
+
   const [paymentStatus, setPaymentStatus] = useState<string>('unpaid')
   const [hasAccess, setHasAccess] = useState<boolean>(false)
 
@@ -252,6 +256,33 @@ export default function UserDetailPage() {
     }
   }
 
+  const handleDeleteUser = async () => {
+    setIsDeleting(true)
+    setDeleteError('')
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setDeleteError(data.message || 'Помилка при видаленні')
+        setIsDeleting(false)
+        return
+      }
+
+      // Успішно — повертаємось до списку
+      router.push('/admin')
+    } catch (err) {
+      console.error('Error deleting user:', err)
+      setDeleteError('Помилка підключення до сервера')
+      setIsDeleting(false)
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -398,13 +429,19 @@ export default function UserDetailPage() {
             </div>
 
             {/* Save Button */}
-            <div className="border-t border-gray-200 pt-6">
+            <div className="border-t border-gray-200 pt-6 flex flex-col gap-3">
               <button
                 onClick={handleSave}
                 disabled={isSaving}
                 className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 font-semibold"
               >
                 {isSaving ? 'Збереження...' : 'Зберегти зміни'}
+              </button>
+              <button
+                onClick={() => { setDeleteError(''); setShowDeleteModal(true) }}
+                className="w-full px-6 py-3 bg-white border border-red-300 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-400 transition font-semibold"
+              >
+                Видалити акаунт
               </button>
             </div>
           </div>
@@ -582,6 +619,67 @@ export default function UserDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center px-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex-shrink-0 h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Видалити акаунт?</h3>
+                <p className="text-sm text-gray-500 mt-0.5">Цю дію неможливо скасувати</p>
+              </div>
+            </div>
+
+            <p className="text-sm text-gray-600 mb-2">
+              Буде безповоротно видалено акаунт <strong className="text-gray-900">{user?.fullName}</strong> ({user?.email}) та всі пов'язані дані:
+            </p>
+            <ul className="text-sm text-gray-500 list-disc list-inside mb-6 space-y-1">
+              <li>Результати тестування</li>
+              <li>Дані про оплати</li>
+              <li>Доступи до тестів</li>
+            </ul>
+
+            {deleteError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                {deleteError}
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={handleDeleteUser}
+                disabled={isDeleting}
+                className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-semibold py-2.5 px-4 rounded-lg transition flex items-center justify-center gap-2"
+              >
+                {isDeleting ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Видалення...</span>
+                  </>
+                ) : (
+                  <span>Так, видалити</span>
+                )}
+              </button>
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                disabled={isDeleting}
+                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2.5 px-4 rounded-lg transition disabled:opacity-50"
+              >
+                Скасувати
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
