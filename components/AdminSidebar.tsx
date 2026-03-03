@@ -12,7 +12,7 @@ export default function AdminSidebar() {
     <aside className="w-64 bg-gray-900 text-white min-h-screen fixed left-0 top-0 pt-6">
       <div className="px-6 mb-8">
         <h2 className="text-2xl font-bold text-blue-400">Дизайн Освіти</h2>
-        <p className="text-sm text-gray-400">Адмініструра</p>
+        <p className="text-sm text-gray-400">Адміністратура</p>
       </div>
 
       <nav className="space-y-2 px-4">
