@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken, getTokenFromHeader } from '@/lib/jwt'
+import { generateCareerRecommendations } from '@/lib/gemini'
 import {
   calculateModule1,
   calculateModule2,
@@ -50,6 +51,13 @@ export async function POST(
         userId,
         testId,
       },
+      include: {
+        user: {
+          select: {
+            fullName: true,
+          },
+        },
+      },
     })
 
     if (!testResult) {
@@ -63,10 +71,11 @@ export async function POST(
     // Отримати AI рекомендації від Gemini
     let recommendation = ''
     try {
-      recommendation = await getGeminiRecommendation(scores)
+      const recommendationObj = await generateCareerRecommendations(scores, testResult.user?.fullName)
+      recommendation = JSON.stringify(recommendationObj) // зберігається як {"text":"..."}
     } catch (err) {
       console.error('Error getting Gemini recommendation:', err)
-      recommendation = 'Не вдалося отримати рекомендацію'
+      recommendation = JSON.stringify({ text: 'Не вдалося отримати рекомендацію' })
     }
 
     // Оновити результат тесту
@@ -155,55 +164,4 @@ function calculateTotalScore(scores: Record<string, any>): number {
   const values = Object.values(scores).filter((v) => typeof v === 'number')
   if (values.length === 0) return 0
   return Math.round(values.reduce((a: number, b: number) => a + b, 0) / values.length)
-}
-
-async function getGeminiRecommendation(scores: Record<string, number>): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY
-  if (!apiKey) {
-    throw new Error('GEMINI_API_KEY not set')
-  }
-
-  const prompt = `
-На основі результатів професійного тесту надайте рекомендацію щодо вибору кар'єри:
-
-Результати:
-- Модель Климова: ${scores.klimov || 0}%
-- Відсацільництво: ${scores.interests || 0}%
-- Тип мислення: ${scores.thinking || 0}%
-- Цінності: ${scores.values || 0}
-- Інтелект (Gardner): ${scores.intelligences || 0}%
-- Holland RIASEC: ${scores.holland || 0}%
-
-Рекомендуйте профессійні напрямки та місцеві скажіть, у якому напрямі розвиватися користувачу. Відповідь на українській мові, коротко (2-3 абзаци).
-  `
-
-  const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': apiKey,
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            {
-              text: prompt,
-            },
-          ],
-        },
-      ],
-    }),
-  })
-
-  if (!response.ok) {
-    throw new Error(`Gemini API error: ${response.statusText}`)
-  }
-
-  const data = await response.json()
-  return (
-    data?.candidates?.[0]?.content?.parts?.[0]?.text || 
-    'Не вдалося отримати рекомендацію'
-  )
 }
