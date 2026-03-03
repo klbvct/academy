@@ -871,26 +871,6 @@ function formatRecommendationsText(text: string): React.ReactNode {
         const cleanLabel = label.replace(/:$/, '')
         // "Можливі посади..." — подзаголовок синим
         const isSubheading = /можливі посади/i.test(cleanLabel)
-        // "Чому цей напрямок..." — обычный текст без выделения
-        const isPlainText = /чому цей напрямок/i.test(cleanLabel)
-        if (isPlainText) {
-          elements.push(
-            <p
-              key={`bullet-${idx}`}
-              style={{
-                fontSize: '14px',
-                color: '#000000',
-                lineHeight: '1.7',
-                marginBottom: '10px',
-                marginTop: '0',
-              }}
-            >
-              {cleanLabel}:
-              {rest && <span> {parseInlineBold(rest, `bl-rest-${idx}`)}</span>}
-            </p>
-          )
-          return
-        }
         elements.push(
           <div
             key={`bullet-${idx}`}

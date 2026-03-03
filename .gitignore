@@ -50,4 +50,11 @@ prisma/**/*.db-journal
 
 # TypeScript
 *.tsbuildinfo
+next-env.d.ts
 
+# Logs
+logs/
+*.log
+
+# Scripts output / temp files
+scripts/output/
