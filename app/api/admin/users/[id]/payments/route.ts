@@ -30,13 +30,14 @@ export async function GET(
     const admin = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: {
+        role: true,
         isActive: true,
       },
     })
 
-    if (!admin) {
+    if (!admin || admin.role !== 'admin') {
       return NextResponse.json(
-        { success: false, message: 'Адміністратор не знайдений' },
+        { success: false, message: 'Доступ заборонено' },
         { status: 403 }
       )
     }
@@ -49,6 +50,12 @@ export async function GET(
     }
 
     const userId = parseInt(params.id)
+    if (isNaN(userId)) {
+      return NextResponse.json(
+        { success: false, message: 'Невалідний ID користувача' },
+        { status: 400 }
+      )
+    }
 
     // Получаем информацию о платежах и доступе к тестам
     const payments = await prisma.payment.findMany({
@@ -160,11 +167,12 @@ export async function PATCH(
     const admin = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: {
+        role: true,
         isActive: true,
       },
     })
 
-    if (!admin || !admin.isActive) {
+    if (!admin || admin.role !== 'admin' || !admin.isActive) {
       return NextResponse.json(
         { success: false, message: 'Доступ заборонено' },
         { status: 403 }

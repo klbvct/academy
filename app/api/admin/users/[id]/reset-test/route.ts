@@ -20,6 +20,9 @@ export async function POST(
     }
 
     const userId = parseInt(params.id)
+    if (isNaN(userId)) {
+      return NextResponse.json({ error: 'Невалідний ID користувача' }, { status: 400 })
+    }
     const { testId } = await request.json()
 
     if (!testId) {

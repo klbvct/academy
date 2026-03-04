@@ -22,6 +22,9 @@ export async function GET(
 
     const userId = parseInt(params.id)
     const testId = parseInt(params.testId)
+    if (isNaN(userId) || isNaN(testId)) {
+      return NextResponse.json({ error: 'Невалідний ID' }, { status: 400 })
+    }
 
     const testResult = await prisma.testResult.findFirst({
       where: { userId, testId },

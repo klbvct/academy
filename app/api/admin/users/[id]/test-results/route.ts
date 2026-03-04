@@ -31,6 +31,9 @@ export async function GET(
     }
 
     const userId = parseInt(params.id)
+    if (isNaN(userId)) {
+      return NextResponse.json({ message: 'Невалідний ID користувача' }, { status: 400 })
+    }
     
     // Get user
     const user = await prisma.user.findUnique({

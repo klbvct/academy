@@ -48,6 +48,12 @@ export async function GET(
     }
 
     const userId = parseInt(params.id)
+    if (isNaN(userId)) {
+      return NextResponse.json(
+        { success: false, message: 'Невалідний ID користувача' },
+        { status: 400 }
+      )
+    }
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -127,6 +133,12 @@ export async function PATCH(
     const body = await request.json()
     const { isActive, role, fullName, email, phone, birthDate } = body
     const userId = parseInt(params.id)
+    if (isNaN(userId)) {
+      return NextResponse.json(
+        { success: false, message: 'Невалідний ID користувача' },
+        { status: 400 }
+      )
+    }
 
     // Подготавливаем данные для обновления
     const updateData: any = {}
@@ -218,6 +230,12 @@ export async function DELETE(
     }
 
     const userId = parseInt(params.id)
+    if (isNaN(userId)) {
+      return NextResponse.json(
+        { success: false, message: 'Невалідний ID користувача' },
+        { status: 400 }
+      )
+    }
 
     // Не дозволяємо видаляти самого себе
     if (userId === decoded.userId) {

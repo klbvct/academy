@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
         })
       } else {
         return NextResponse.json(
-          { success: false, message: 'Користувач не знайдений' },
+          { success: false, message: 'Невірний email або пароль' },
           { status: 401 }
         )
       }
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     if (!isPasswordValid) {
       return NextResponse.json(
-        { success: false, message: 'Невірний пароль' },
+        { success: false, message: 'Невірний email або пароль' },
         { status: 401 }
       )
     }
