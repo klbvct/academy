@@ -214,7 +214,7 @@ export default function Home() {
                       muted
                       loop
                       playsInline
-                      preload="auto"
+                      preload="none"
                     />
                   </div>
                 </div>
@@ -323,7 +323,7 @@ export default function Home() {
                     loop
                     playsInline
                     autoPlay
-                    preload="auto"
+                    preload="none"
                   />
                 </div>
               </div>
