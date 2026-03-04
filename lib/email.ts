@@ -52,7 +52,8 @@ export async function sendPasswordResetEmail(
       return false
     }
 
-    const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`
+    const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://academy.education-design.com.ua'
+    const resetLink = `${appUrl}/reset-password?token=${resetToken}`
 
     const mailOptions = {
       from: process.env.SMTP_FROM || 'noreply@education-design.com.ua',
