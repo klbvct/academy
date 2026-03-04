@@ -1,20 +1,30 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useLoading } from '@/app/contexts/LoadingContext'
 import { usePathname, useSearchParams } from 'next/navigation'
 
-export function GlobalLoadingIndicator() {
-  const { isLoading, startLoading, stopLoading } = useLoading()
+function RouteChangeListener({ onRouteChange }: { onRouteChange: () => void }) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
+  useEffect(() => {
+    onRouteChange()
+  }, [pathname, searchParams, onRouteChange])
+
+  return null
+}
+
+function GlobalLoadingIndicatorInner() {
+  const { isLoading, stopLoading } = useLoading()
   const [progress, setProgress] = useState(0)
 
-  // Отслеживание изменений маршрута
-  useEffect(() => {
+  const handleRouteChange = () => {
     stopLoading()
     setProgress(0)
-  }, [pathname, searchParams, stopLoading])
+  }
+
+  // Отслеживание изменений маршрута
 
   // Анимация прогресс-бара
   useEffect(() => {
@@ -40,6 +50,9 @@ export function GlobalLoadingIndicator() {
 
   return (
     <>
+      <Suspense fallback={null}>
+        <RouteChangeListener onRouteChange={handleRouteChange} />
+      </Suspense>
       {/* Прогресс-бар сверху */}
       <div
         style={{
@@ -111,5 +124,13 @@ export function GlobalLoadingIndicator() {
         }
       `}</style>
     </>
+  )
+}
+
+export function GlobalLoadingIndicator() {
+  return (
+    <Suspense fallback={null}>
+      <GlobalLoadingIndicatorInner />
+    </Suspense>
   )
 }
