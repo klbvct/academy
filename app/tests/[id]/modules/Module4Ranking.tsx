@@ -21,7 +21,7 @@ export function Module4Ranking({ questions, answers, onAnswerChange, maxRank = 1
         <div key={index} className="pb-6 border-b border-gray-200 last:border-b-0 last:pb-0">
           <div className="flex items-center gap-4">
             <label className="flex-1">
-              <span className="font-regular text-gray-900 text-sm">
+              <span className="font-regular text-gray-900 text-base">
                 {question.number}. {question.text || ''}
               </span>
             </label>

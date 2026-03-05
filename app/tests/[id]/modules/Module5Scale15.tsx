@@ -12,7 +12,7 @@ export function Module5Scale15({ questions, answers, onAnswerChange }: Module5Sc
       {questions.map((question, index) => (
         <div key={index} className="pb-6 border-b border-gray-200 last:border-b-0 last:pb-0">
           <label className="block mb-4">
-            <span className="font-regular text-gray-900 text-sm">
+            <span className="font-regular text-gray-900 text-base">
               {question.number}. {question.text || ''}
             </span>
           </label>

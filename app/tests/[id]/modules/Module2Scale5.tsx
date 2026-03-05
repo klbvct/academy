@@ -13,7 +13,7 @@ export function Module2Scale5({ questions, answers, onAnswerChange, scale }: Mod
       {questions.map((question, index) => (
         <div key={index} className="pb-6 border-b border-gray-200 last:border-b-0 last:pb-0">
           <label className="block mb-4">
-            <span className="font-regular text-gray-900 text-sm">
+            <span className="font-regular text-gray-900 text-base">
               {question.number}. {question.text || ''}
             </span>
           </label>
@@ -23,7 +23,7 @@ export function Module2Scale5({ questions, answers, onAnswerChange, scale }: Mod
               {scale?.map((scaleValue) => (
                 <label key={scaleValue} className="cursor-pointer">
                   <span
-                    className="flex flex-col items-center gap-1 text-sm font-regular py-2 px-4 border-2 rounded-lg cursor-pointer transition-all hover:border-blue-600"
+                    className="flex flex-col items-center gap-1 text-base font-regular py-2 px-4 border-2 rounded-lg cursor-pointer transition-all hover:border-blue-600"
                     style={{
                       borderColor:
                         answers[`q${question.number}`] === scaleValue

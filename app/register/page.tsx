@@ -83,14 +83,14 @@ export default function RegisterPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8 space-y-5">
             {error && (
-              <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm">
+              <div className="bg-red-50 text-red-700 p-4 rounded-lg text-base">
                 {error}
               </div>
             )}
 
             {/* Full Name */}
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="fullName" className="block text-base font-medium text-gray-700 mb-2">
                 Ім'я та прізвище
               </label>
               <input
@@ -106,7 +106,7 @@ export default function RegisterPage() {
 
             {/* Birth Date */}
             <div>
-              <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="birthDate" className="block text-base font-medium text-gray-700 mb-2">
                 Дата народження
               </label>
               <input
@@ -121,7 +121,7 @@ export default function RegisterPage() {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-base font-medium text-gray-700 mb-2">
                 Електронна пошта
               </label>
               <input
@@ -137,7 +137,7 @@ export default function RegisterPage() {
 
             {/* Phone */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="phone" className="block text-base font-medium text-gray-700 mb-2">
                 Телефон
               </label>
               <input
@@ -153,7 +153,7 @@ export default function RegisterPage() {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-base font-medium text-gray-700 mb-2">
                 Пароль
               </label>
               <input
@@ -169,7 +169,7 @@ export default function RegisterPage() {
             
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="confirmPassword" className="block text-base font-medium text-gray-700 mb-2">
                 Підтвердьте пароль
               </label>
               <input

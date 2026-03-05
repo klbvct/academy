@@ -339,7 +339,7 @@ export default function UserDetailPage() {
               <div className="space-y-4">
                 {/* Full Name */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-base font-medium text-gray-700 mb-2">
                     Ім'я та прізвище
                   </label>
                   <input
@@ -352,7 +352,7 @@ export default function UserDetailPage() {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-base font-medium text-gray-700 mb-2">
                     Email
                   </label>
                   <input
@@ -365,7 +365,7 @@ export default function UserDetailPage() {
 
                 {/* Phone */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-base font-medium text-gray-700 mb-2">
                     Телефон
                   </label>
                   <input
@@ -378,7 +378,7 @@ export default function UserDetailPage() {
 
                 {/* Birth Date */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-base font-medium text-gray-700 mb-2">
                     Дата народження
                   </label>
                   <input
@@ -398,7 +398,7 @@ export default function UserDetailPage() {
               <div className="space-y-4">
                 {/* Role */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-base font-medium text-gray-700 mb-2">
                     Роль
                   </label>
                   <select
@@ -413,7 +413,7 @@ export default function UserDetailPage() {
 
                 {/* Status */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-base font-medium text-gray-700 mb-2">
                     Статус
                   </label>
                   <select
@@ -453,13 +453,13 @@ export default function UserDetailPage() {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Інформація</h3>
 
             <div>
-              <p className="text-sm text-gray-600">ID користувача</p>
+              <p className="text-base text-gray-600">ID користувача</p>
               <p className="font-mono text-lg">{user?.id}</p>
             </div>
 
             <div>
-              <p className="text-sm text-gray-600">Статус</p>
-              <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+              <p className="text-base text-gray-600">Статус</p>
+              <span className={`inline-block px-3 py-1 rounded-full text-base font-semibold ${
                 formData.isActive
                   ? 'bg-green-100 text-green-800'
                   : 'bg-red-100 text-red-800'
@@ -469,8 +469,8 @@ export default function UserDetailPage() {
             </div>
 
             <div>
-              <p className="text-sm text-gray-600">Роль</p>
-              <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+              <p className="text-base text-gray-600">Роль</p>
+              <span className={`inline-block px-3 py-1 rounded-full text-base font-semibold ${
                 formData.role === 'admin'
                   ? 'bg-red-100 text-red-800'
                   : 'bg-blue-100 text-blue-800'
@@ -482,15 +482,15 @@ export default function UserDetailPage() {
             <hr className="my-4" />
 
             <div>
-              <p className="text-sm text-gray-600">Дата реєстрації</p>
-              <p className="text-sm">
+              <p className="text-base text-gray-600">Дата реєстрації</p>
+              <p className="text-base">
                 {user?.createdAt && new Date(user.createdAt).toLocaleDateString('uk-UA')}
               </p>
             </div>
 
             <div>
-              <p className="text-sm text-gray-600">Остання зміна</p>
-              <p className="text-sm">
+              <p className="text-base text-gray-600">Остання зміна</p>
+              <p className="text-base">
                 {user?.updatedAt && new Date(user.updatedAt).toLocaleDateString('uk-UA')}
               </p>
             </div>
@@ -499,14 +499,14 @@ export default function UserDetailPage() {
             <hr className="my-4" />
             
             {testAccess.length === 0 ? (
-              <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+              <div className="bg-gray-50 p-4 rounded-lg text-base text-gray-600">
                 <p className="font-semibold">Статус тесту</p>
                 <p className="mt-2">Користувач не має доступу до тестів</p>
               </div>
             ) : (
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm font-semibold text-gray-900 mb-2">{testAccess[0].testTitle}</p>
+                  <p className="text-base font-semibold text-gray-900 mb-2">{testAccess[0].testTitle}</p>
                   <p className="text-xs text-gray-600 mb-3">{testAccess[0].testPrice} грн</p>
 
                   {accessUpdateError && (
@@ -536,7 +536,7 @@ export default function UserDetailPage() {
                       value={paymentStatus}
                       onChange={(e) => handleUpdateTestAccess(e.target.value, e.target.value === 'success')}
                       disabled={isUpdatingAccess}
-                      className="w-full px-2 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
+                      className="w-full px-2 py-2 border border-gray-300 rounded text-base focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
                     >
                       <option value="unpaid">Не оплачено</option>
                       <option value="success">Оплачено</option>
@@ -632,21 +632,21 @@ export default function UserDetailPage() {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-gray-900">Видалити акаунт?</h3>
-                <p className="text-sm text-gray-500 mt-0.5">Цю дію неможливо скасувати</p>
+                <p className="text-base text-gray-500 mt-0.5">Цю дію неможливо скасувати</p>
               </div>
             </div>
 
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-base text-gray-600 mb-2">
               Буде безповоротно видалено акаунт <strong className="text-gray-900">{user?.fullName}</strong> ({user?.email}) та всі пов'язані дані:
             </p>
-            <ul className="text-sm text-gray-500 list-disc list-inside mb-6 space-y-1">
+            <ul className="text-base text-gray-500 list-disc list-inside mb-6 space-y-1">
               <li>Результати тестування</li>
               <li>Дані про оплати</li>
               <li>Доступи до тестів</li>
             </ul>
 
             {deleteError && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-base text-red-700">
                 {deleteError}
               </div>
             )}

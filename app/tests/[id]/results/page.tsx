@@ -378,7 +378,7 @@ export default function ResultsPage() {
             onClick={handlePrint}
             disabled={isGeneratingPDF}
             aria-label="Друкувати або зберегти результати як PDF"
-            className="text-white px-6 py-3 rounded-lg font-semibold text-sm transition-all hover:scale-105 flex items-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-white px-6 py-3 rounded-lg font-semibold text-base transition-all hover:scale-105 flex items-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ background: '#bb2d2d' }}
           >
             <span>{isGeneratingPDF ? 'Генерація PDF...' : 'Друк / Зберегти PDF'}</span>
@@ -685,7 +685,7 @@ export default function ResultsPage() {
               </span>
               Підготовка до вступу
             </h2>
-            <ol style={{ marginLeft: '30px', lineHeight: '1.6', listStyleType: 'decimal' }}>
+            <ol style={{ marginLeft: '30px', lineHeight: '1.6', listStyleType: 'decimal', fontSize: '13px' }}>
               <li style={{ marginTop: '1rem' }}>
                 Вивчити представлені напрямки навчання та їх значення. Зрозуміти, що вивчатиметься в рамках цих напрямків,
                 ознайомитись з планом навчання.
@@ -878,7 +878,7 @@ function formatRecommendationsText(text: string): React.ReactNode {
               marginBottom: isSubheading ? '6px' : '8px',
               marginTop: isSubheading ? '12px' : '0',
               paddingLeft: isSubheading ? '0' : '12px',
-              fontSize: '14px',
+              fontSize: '13px',
               lineHeight: '1.7',
               color: '#000000',
             }}
@@ -896,7 +896,7 @@ function formatRecommendationsText(text: string): React.ReactNode {
             style={{
               marginBottom: '8px',
               paddingLeft: '12px',
-              fontSize: '14px',
+              fontSize: '13px',
               lineHeight: '1.7',
               color: '#000000',
             }}
@@ -913,7 +913,7 @@ function formatRecommendationsText(text: string): React.ReactNode {
       <p
         key={`text-${idx}`}
         style={{
-          fontSize: '14px',
+          fontSize: '13px',
           color: '#000000',
           lineHeight: '1.7',
           marginBottom: '10px',

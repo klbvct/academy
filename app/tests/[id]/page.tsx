@@ -247,7 +247,7 @@ export default function TestPage() {
                   />
                 </div>
               </div>
-              <span className="text-sm font-semibold whitespace-nowrap" style={{ color: '#0c68f5' }}>
+              <span className="text-base font-semibold whitespace-nowrap" style={{ color: '#0c68f5' }}>
                 Модуль {currentModule} з 8
               </span>
               <Link
@@ -263,11 +263,11 @@ export default function TestPage() {
         {/* Instruction */}
         <div className="mt-24 mb-8">
           <div className="bg-gray-100 rounded-lg p-6 mb-8" style={{ backgroundColor: '#f3f4f6' }}>
-            <p className="text-gray-700 whitespace-pre-line text-sm leading-relaxed">
+            <p className="text-gray-700 whitespace-pre-line text-base leading-relaxed">
               {moduleData.instruction}
             </p>
             {moduleData.subtitle && (
-              <p className="text-sm font-semibold mt-3" style={{ color: '#0c68f5' }}>
+              <p className="text-base font-semibold mt-3" style={{ color: '#0c68f5' }}>
                 {moduleData.subtitle}
               </p>
             )}
@@ -345,7 +345,7 @@ export default function TestPage() {
               )}
             </button>
             {completing && (
-              <p className="text-sm text-gray-500 text-center">
+              <p className="text-base text-gray-500 text-center">
                 Зберігаємо ваші відповіді...
               </p>
             )}

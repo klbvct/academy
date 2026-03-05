@@ -13,14 +13,14 @@ export default function Oferta() {
         <div className="max-w-4xl mx-auto px-6 py-16">
           {/* Посилання назад */}
           <div className="mb-6">
-            <Link href="/" className="text-sm text-blue-600 hover:underline">
+            <Link href="/" className="text-base text-blue-600 hover:underline">
               ← Повернутися на сайт
             </Link>
           </div>
 
           {/* Заголовок */}
           <div className="mb-12">
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-base font-medium text-blue-700 mb-6">
               Юридична інформація
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">

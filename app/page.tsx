@@ -156,7 +156,7 @@ export default function Home() {
               <div>
                 {/* pill badge */}
                 <div id="h-badge" data-reveal="" style={{ transitionDelay: '0ms' }}
-                  className={`inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs sm:text-sm font-medium text-blue-700 mb-6 ${cls(visible, 'h-badge')}`}>
+                  className={`inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs sm:text-base font-medium text-blue-700 mb-6 ${cls(visible, 'h-badge')}`}>
                   <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
                   Сучасне комплексне кар&#39;єрне тестування
                 </div>
@@ -183,7 +183,7 @@ export default function Home() {
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-2xl font-bold text-gray-900">1 700 грн</span>
                     <span className="w-px h-6 bg-blue-400/50" />
-                    <span className="text-sm text-gray-400">повний доступ</span>
+                    <span className="text-base text-gray-400">повний доступ</span>
                   </div>
                 </div>
               </div>
@@ -227,7 +227,7 @@ export default function Home() {
         <section className="py-24 bg-gray-50">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-14">
-              <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm font-medium text-gray-600 mb-4 shadow-sm">
+              <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 text-base font-medium text-gray-600 mb-4 shadow-sm">
                 Чи знайоме вам це?
               </div>
               <h2 className="font-sans text-3xl md:text-4xl font-bold text-gray-900">
@@ -239,7 +239,7 @@ export default function Home() {
                 <div key={i}
                   className="flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm hover:shadow-md hover:border-blue-100 hover:-translate-y-1 transition-all duration-300">
                   <span className="flex-shrink-0 mt-0.5">{p.icon}</span>
-                  <p className="text-sm text-gray-600 leading-relaxed">{p.text}</p>
+                  <p className="text-base text-gray-600 leading-relaxed">{p.text}</p>
                 </div>
               ))}
             </div>
@@ -250,7 +250,7 @@ export default function Home() {
         <section className="py-24 bg-white">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-base font-medium text-blue-700 mb-4">
                 Чому ми?
               </div>
               <h2 className="font-sans text-3xl md:text-4xl font-bold text-gray-900">
@@ -267,7 +267,7 @@ export default function Home() {
                   <div>
                     <div className="text-xs font-mono text-blue-500 font-semibold mb-1">{a.badge}</div>
                     <h3 className="font-semibold text-gray-900 mb-2 leading-snug">{a.title}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">{a.desc}</p>
+                    <p className="text-base text-gray-500 leading-relaxed">{a.desc}</p>
                   </div>
                 </div>
               ))}
@@ -280,7 +280,7 @@ export default function Home() {
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-16">
               <div id="hw-badge" data-reveal="" style={{ transitionDelay: '0ms' }}
-                className={`inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm font-medium text-gray-600 mb-4 shadow-sm ${cls(visible, 'hw-badge')}`}>
+                className={`inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 text-base font-medium text-gray-600 mb-4 shadow-sm ${cls(visible, 'hw-badge')}`}>
                 Простий процес
               </div>
               <h2 id="hw-h" data-reveal="" style={{ transitionDelay: '100ms' }}
@@ -298,7 +298,7 @@ export default function Home() {
                       {i + 1}
                     </div>
                     <div className="flex-1 rounded-xl border border-gray-100 bg-white px-4 py-3 shadow-sm group-hover:border-blue-100 group-hover:shadow-md transition-all duration-200">
-                      <p className="text-sm text-gray-600 leading-relaxed">{s}</p>
+                      <p className="text-base text-gray-600 leading-relaxed">{s}</p>
                     </div>
                   </div>
                 ))}
@@ -335,7 +335,7 @@ export default function Home() {
         <section className="py-24 bg-white" ref={resultsSectionRef}>
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-base font-medium text-blue-700 mb-4">
                 Результат
               </div>
               <h2 className="font-sans text-3xl md:text-4xl font-bold text-gray-900">
@@ -397,7 +397,7 @@ export default function Home() {
           <div className="max-w-5xl mx-auto px-6">
 
             <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-base font-medium text-blue-700 mb-4">
                 Автор методики
               </div>
               <h2 className="font-sans text-3xl md:text-4xl font-bold text-gray-900">
@@ -443,7 +443,7 @@ export default function Home() {
                 </div>
 
                 {/* tagline */}
-                <p className="text-sm text-gray-500 leading-relaxed border-l-2 border-blue-300 pl-4 italic">
+                <p className="text-base text-gray-500 leading-relaxed border-l-2 border-blue-300 pl-4 italic">
                   11+ років досвіду підготовки і зарахування учнів і студентів в найкращі навчальні заклади світу
                 </p>
 
@@ -477,7 +477,7 @@ export default function Home() {
                 <div className="flex items-center gap-2 text-blue-200">
                   <span className="text-xl font-bold text-white">1 700 грн</span>
                   <span className="w-px h-4 bg-blue-400/50" />
-                  <span className="text-sm">повний доступ</span>
+                  <span className="text-base">повний доступ</span>
                 </div>
               </div>
             </div>

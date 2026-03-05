@@ -117,13 +117,13 @@ export default function AdminTestReportPage() {
       <div className="fixed top-5 right-5 z-50 flex gap-2 print:hidden">
         <Link
           href={`/admin/users/${userId}/test-answers/${testId}`}
-          className="px-4 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition font-semibold"
+          className="px-4 py-2 bg-gray-600 text-white text-base rounded-lg hover:bg-gray-700 transition font-semibold"
         >
           ← Відповіді
         </Link>
         <button
           onClick={handlePrint}
-          className="px-4 py-2 text-white text-sm rounded-lg font-semibold transition hover:scale-105"
+          className="px-4 py-2 text-white text-base rounded-lg font-semibold transition hover:scale-105"
           style={{ background: '#bb2d2d' }}
         >
           Друк / PDF
@@ -149,7 +149,7 @@ export default function AdminTestReportPage() {
           <p className="text-lg" style={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: '300' }}>
             Звіт профорієнтаційного тестування
           </p>
-          <p className="text-sm mt-2 print:hidden" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <p className="text-base mt-2 print:hidden" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
             👁 Перегляд адміністратора
           </p>
         </header>

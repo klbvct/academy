@@ -156,7 +156,7 @@ function ResetPasswordContent() {
             <p className="text-gray-600 mb-4">
               Ваш пароль успішно змінено.
             </p>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-base">
               Ви будете перенаправлені в кабінет...
             </p>
           </div>
@@ -181,13 +181,13 @@ function ResetPasswordContent() {
 
           {passwordError && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800 text-sm">{passwordError}</p>
+              <p className="text-red-800 text-base">{passwordError}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-base font-medium text-gray-700 mb-2">
                 Новий пароль
               </label>
               <input
@@ -203,7 +203,7 @@ function ResetPasswordContent() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="confirmPassword" className="block text-base font-medium text-gray-700 mb-2">
                 Підтвердіть пароль
               </label>
               <input
@@ -227,7 +227,7 @@ function ResetPasswordContent() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-base text-gray-600">
               <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
                 Повернутись на вхід
               </Link>

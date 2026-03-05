@@ -113,14 +113,14 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8 space-y-6">
             {error && (
-              <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm">
+              <div className="bg-red-50 text-red-700 p-4 rounded-lg text-base">
                 {error}
               </div>
             )}
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-base font-medium text-gray-700 mb-2">
                 Електронна пошта
               </label>
               <input
@@ -137,13 +137,13 @@ export default function LoginPage() {
             {/* Password */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="block text-base font-medium text-gray-700">
                   Пароль
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowForgotModal(true)}
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  className="text-base text-blue-600 hover:text-blue-700 font-medium"
                 >
                   Забув пароль?
                 </button>
@@ -194,19 +194,19 @@ export default function LoginPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Забув пароль?</h3>
-            <p className="text-gray-600 text-sm mb-6">
+            <p className="text-gray-600 text-base mb-6">
               Введіть вашу email-адресу, і ми пришлемо вам посилання для встановлення нового пароля.
             </p>
 
             {forgotError && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-800 text-sm">{forgotError}</p>
+                <p className="text-red-800 text-base">{forgotError}</p>
               </div>
             )}
 
             {forgotSuccess && (
               <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-green-800 text-sm">{forgotMessage}</p>
+                <p className="text-green-800 text-base">{forgotMessage}</p>
                 <p className="text-green-700 text-xs mt-2">
                   Перевірте папку спаму, якщо не знайдете листа.
                 </p>
@@ -216,7 +216,7 @@ export default function LoginPage() {
             {!forgotSuccess ? (
               <form onSubmit={handleForgotPassword} className="space-y-4">
                 <div>
-                  <label htmlFor="forgot-email" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="forgot-email" className="block text-base font-medium text-gray-700 mb-2">
                     Email адреса
                   </label>
                   <input

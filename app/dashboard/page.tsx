@@ -217,9 +217,9 @@ export default function DashboardPage() {
                 {/* Test Header */}
                 <div className="p-6 border-b border-gray-200">
                   <h4 className="text-lg font-semibold mb-2">{test.title}</h4>
-                  <p className="text-gray-600 text-sm mb-4">{test.description}</p>
+                  <p className="text-gray-600 text-base mb-4">{test.description}</p>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-500">⏱️ {test.duration} хв</p>
+                    <p className="text-base text-gray-500">⏱️ {test.duration} хв</p>
                     <span className="text-lg font-bold text-blue-600">{test.price} ₴</span>
                   </div>
                 </div>
@@ -231,7 +231,7 @@ export default function DashboardPage() {
                       {!test.hasAccess ? (
                         <>
                           <div className="mb-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
-                            <p className="text-sm text-orange-800 font-semibold">🔒 Доступ до тесту закрито</p>
+                            <p className="text-base text-orange-800 font-semibold">🔒 Доступ до тесту закрито</p>
                             <p className="text-xs text-orange-700 mt-1">Оплатіть, щоб розпочати профорієнтаційне тестування</p>
                           </div>
                           <button
@@ -247,13 +247,13 @@ export default function DashboardPage() {
                           {/* Прогресс теста */}
                           {(!test.lastCompletedModule || test.lastCompletedModule === 0) && (
                             <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                              <p className="text-sm text-green-800 font-semibold">✅ Доступ відкрито</p>
+                              <p className="text-base text-green-800 font-semibold">✅ Доступ відкрито</p>
                               <p className="text-xs text-green-700 mt-1">Починайте в зручний для вас час</p>
                             </div>
                           )}
                           {test.lastCompletedModule !== undefined && test.lastCompletedModule > 0 && (
                             <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                              <p className="text-sm text-blue-800 font-semibold">⚡ Тест розпочато</p>
+                              <p className="text-base text-blue-800 font-semibold">⚡ Тест розпочато</p>
                               <p className="text-xs text-blue-700 mt-1">
                                 Пройдено модулів: {test.lastCompletedModule} з 8
                               </p>
@@ -296,7 +296,7 @@ export default function DashboardPage() {
                   {test.isCompleted && (
                     <>
                       <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                        <p className="text-sm text-green-800 font-semibold">✓ Завершено</p>
+                        <p className="text-base text-green-800 font-semibold">✓ Завершено</p>
                         <p className="text-xs text-green-700 mt-1">
                           {test.completedAt ? new Date(test.completedAt).toLocaleDateString('uk-UA') : 'N/A'}
                         </p>

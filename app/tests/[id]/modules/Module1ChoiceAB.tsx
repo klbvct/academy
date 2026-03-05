@@ -12,7 +12,7 @@ export function Module1ChoiceAB({ questions, answers, onAnswerChange }: Module1C
       {questions.map((question, index) => (
         <div key={index} className="pb-6 border-b border-gray-200 last:border-b-0 last:pb-0">
           <label className="block mb-4">
-            <span className="font-semibold text-gray-900 text-sm">
+            <span className="font-semibold text-gray-900 text-base">
               {question.number}. {question.text || ''}
             </span>
           </label>
@@ -39,7 +39,7 @@ export function Module1ChoiceAB({ questions, answers, onAnswerChange }: Module1C
                 required
                 className="mr-3"
               />
-              <span className="text-gray-700 font-regular text-sm">{question.a}</span>
+              <span className="text-gray-700 font-regular text-base">{question.a}</span>
             </label>
             <label
               className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer transition-all hover:border-blue-600 hover:bg-gray-50"
@@ -62,7 +62,7 @@ export function Module1ChoiceAB({ questions, answers, onAnswerChange }: Module1C
                 required
                 className="mr-3"
               />
-              <span className="text-gray-700 font-regular text-sm">{question.b}</span>
+              <span className="text-gray-700 font-regular text-base">{question.b}</span>
             </label>
           </div>
         </div>

@@ -166,7 +166,7 @@ export default function TestAnswersPage() {
             return (
               <div key={question.number} className="bg-white rounded-lg shadow-md overflow-hidden">
                 <div className="bg-blue-50 border-b border-gray-200 px-6 py-3">
-                  <h3 className="font-semibold text-gray-900 text-sm">
+                  <h3 className="font-semibold text-gray-900 text-base">
                     Питання {question.number}: {question.text}
                   </h3>
                 </div>
@@ -184,8 +184,8 @@ export default function TestAnswersPage() {
                         const answer = moduleAnswers[answerKey]
                         return (
                           <tr key={idx} className="border-b border-gray-200 hover:bg-gray-50">
-                            <td className="px-6 py-3 text-gray-700 text-sm">{option}</td>
-                            <td className="px-6 py-3 text-gray-900 text-center text-sm">
+                            <td className="px-6 py-3 text-gray-700 text-base">{option}</td>
+                            <td className="px-6 py-3 text-gray-900 text-center text-base">
                               {answer || '—'}
                             </td>
                           </tr>
@@ -221,9 +221,9 @@ export default function TestAnswersPage() {
 
                 return (
                   <tr key={question.number} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="px-6 py-3 text-gray-900 font-semibold text-sm">{question.number}</td>
-                    <td className="px-6 py-3 text-gray-700 text-sm">{question.text}</td>
-                    <td className="px-6 py-3 text-gray-900 text-sm">
+                    <td className="px-6 py-3 text-gray-900 font-semibold text-base">{question.number}</td>
+                    <td className="px-6 py-3 text-gray-700 text-base">{question.text}</td>
+                    <td className="px-6 py-3 text-gray-900 text-base">
                       {getAnswerDisplay(moduleNum, question, answer)}
                     </td>
                   </tr>
@@ -276,7 +276,7 @@ export default function TestAnswersPage() {
               {testResult?.hasRecommendations ? (
                 <Link
                   href={`/admin/users/${userId}/test-report/${testId}`}
-                  className="px-5 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition font-semibold flex items-center gap-2"
+                  className="px-5 py-2 bg-blue-600 text-white text-base rounded-lg hover:bg-blue-700 transition font-semibold flex items-center gap-2"
                 >
                   <span>↗</span>
                   Переглянути результати
@@ -285,7 +285,7 @@ export default function TestAnswersPage() {
                 <button
                   disabled
                   title="Результати ще не згенеровані або тест не оплачено"
-                  className="px-5 py-2 bg-gray-200 text-gray-400 text-sm rounded-lg font-semibold cursor-not-allowed flex items-center gap-2"
+                  className="px-5 py-2 bg-gray-200 text-gray-400 text-base rounded-lg font-semibold cursor-not-allowed flex items-center gap-2"
                 >
                   <span>↗</span>
                   Переглянути результати
@@ -296,23 +296,23 @@ export default function TestAnswersPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* User Info */}
               <div className="border-l-4 border-blue-500 pl-6">
-                <p className="text-gray-600 text-sm mb-1">Користувач</p>
+                <p className="text-gray-600 text-base mb-1">Користувач</p>
                 <p className="text-xl font-semibold text-gray-900 mb-2">
                   {user?.fullName}
                 </p>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 text-base">
                   {user?.email}
                 </p>
               </div>
               
               {/* Test Info */}
               <div className="border-l-4 border-green-500 pl-6">
-                <p className="text-gray-600 text-sm mb-1">Тест</p>
+                <p className="text-gray-600 text-base mb-1">Тест</p>
                 <p className="text-xl font-semibold text-gray-900 mb-2">
                   {testResult?.testTitle}
                 </p>
                 {testResult?.completedAt && (
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-gray-600 text-base">
                     ✓ Завершено: {new Date(testResult.completedAt).toLocaleString('uk-UA')}
                   </p>
                 )}

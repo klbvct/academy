@@ -11,7 +11,7 @@ export function Module3ChoiceABC({ questions, answers, onAnswerChange }: Module3
     <div className="space-y-6">
       {questions.map((question, index) => (
         <div key={index} className="pb-6 border-b border-gray-200 last:border-b-0 last:pb-0">
-          <p className="font-regular text-gray-900 text-sm mb-4">
+          <p className="font-regular text-gray-900 text-base mb-4">
             {question.number}. {question.text || ''}
           </p>
 
@@ -35,7 +35,7 @@ export function Module3ChoiceABC({ questions, answers, onAnswerChange }: Module3
                     required
                     className="mr-3 shrink-0"
                   />
-                  <span className="text-gray-700 font-regular text-sm">{text}</span>
+                  <span className="text-gray-700 font-regular text-base">{text}</span>
                 </label>
               )
             })}

@@ -9,7 +9,7 @@ export default function Footer() {
           </div>
           <div>
             <h4 className="text-white font-semibold mb-4">Контакти</h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2 text-base">
               <li className="text-white font-medium">ТОВ «ОТЦ ЄВРОПА»</li>
               <li>Код ЄДРПОУ: 39292789</li>
               <li>Україна, м. Запоріжжя,<br />вул. Дзержинського, оф. 84</li>

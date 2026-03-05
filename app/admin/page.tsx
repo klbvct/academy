@@ -97,13 +97,13 @@ export default function AdminPage() {
           <table className="w-full">
             <thead>
               <tr className="bg-gray-100 border-b border-gray-200">
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Ім'я</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Телефон</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Роль</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Статус</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Дата реєстрації</th>
-                {/* <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Дія</th> */}
+                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">Ім'я</th>
+                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">Email</th>
+                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">Телефон</th>
+                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">Роль</th>
+                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">Статус</th>
+                <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">Дата реєстрації</th>
+                {/* <th className="px-6 py-3 text-left text-base font-semibold text-gray-700">Дія</th> */}
               </tr>
             </thead>
             <tbody>
@@ -120,10 +120,10 @@ export default function AdminPage() {
                     onClick={() => router.push(`/admin/users/${user.id}`)}
                     className="border-b border-gray-200 hover:bg-blue-50 cursor-pointer transition"
                   >
-                    <td className="px-6 py-4 text-sm text-gray-900 font-medium">{user.fullName}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{user.email}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{user.phone || '—'}</td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-6 py-4 text-base text-gray-900 font-medium">{user.fullName}</td>
+                    <td className="px-6 py-4 text-base text-gray-600">{user.email}</td>
+                    <td className="px-6 py-4 text-base text-gray-600">{user.phone || '—'}</td>
+                    <td className="px-6 py-4 text-base">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         user.role === 'admin'
                           ? 'bg-red-100 text-red-800'
@@ -132,7 +132,7 @@ export default function AdminPage() {
                         {user.role === 'admin' ? 'Адміністратор' : 'Користувач'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-6 py-4 text-base">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         user.isActive
                           ? 'bg-green-100 text-green-800'
@@ -141,7 +141,7 @@ export default function AdminPage() {
                         {user.isActive ? 'Активний' : 'Блокований'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-base text-gray-600">
                       {formatDate(user.createdAt)}
                     </td>
 

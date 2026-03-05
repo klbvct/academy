@@ -19,7 +19,7 @@ export function Module8Modality({ questions, answers, onAnswerChange }: Module8M
     <div className="space-y-6">
       {/* Подсказка */}
       <div className="bg-blue-50 rounded-lg p-4 mb-6">
-        <p className="text-sm text-blue-800 font-regular">
+        <p className="text-base text-blue-800 font-regular">
           Для кожного питання оберіть оцінку від 1 до 4 для кожного варіанту. Кожна цифра може бути використана тільки один раз. Вже обрані цифри зникають зі списку.
         </p>
       </div>
@@ -30,7 +30,7 @@ export function Module8Modality({ questions, answers, onAnswerChange }: Module8M
         return (
           <div key={index} className="pb-6 border-b border-gray-200 last:border-b-0 last:pb-0">
             <label className="block mb-4">
-              <span className="font-semibold text-gray-900 text-sm">
+              <span className="font-semibold text-gray-900 text-base">
                 {question.number}. {question.text || ''}
               </span>
             </label>
@@ -51,7 +51,7 @@ export function Module8Modality({ questions, answers, onAnswerChange }: Module8M
                 return (
                   <div key={optIndex} className="flex items-center gap-4 bg-gray-50 rounded-lg p-4">
                     <div className="flex-1">
-                      <span className="text-gray-700 font-regular text-sm">{option}</span>
+                      <span className="text-gray-700 font-regular text-base">{option}</span>
                     </div>
                     <select
                       value={answers[currentKey] || ''}
