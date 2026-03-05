@@ -14,7 +14,7 @@ export default function Footer() {
               <li>Код ЄДРПОУ: 39292789</li>
               <li>Україна, м. Запоріжжя,<br />вул. Дзержинського, оф. 84</li>
               <li>
-                <a href="tel:+38066322301" className="hover:text-white">+38066322301</a>
+                <a href="tel:+380663223011" className="hover:text-white">+380663223011</a>
               </li>
               <li>
                 <a href="mailto:admin@education-design.com.ua" className="hover:text-white">admin@education-design.com.ua</a>
