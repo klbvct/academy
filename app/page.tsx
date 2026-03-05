@@ -457,7 +457,7 @@ export default function Home() {
         <section className="py-24 bg-blue-600">
           <div className="max-w-3xl mx-auto px-6">
             <div id="cta-card" data-reveal="" style={{ transitionDelay: '0ms' }}
-              className={`relative rounded-3xl bg-blue-600 p-10 md:p-14 text-center shadow-2xl shadow-blue-200 overflow-hidden ${cls(visible, 'cta-card')}`}>
+              className={`relative rounded-3xl bg-blue-600 p-10 md:p-14 text-left md:text-center shadow-2xl shadow-blue-200 overflow-hidden ${cls(visible, 'cta-card')}`}>
               {/* decorative circles */}
               <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-white/5" />
               <div className="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-white/5" />
