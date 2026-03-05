@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   title: 'Платформа профорієнтаційного тестування',
   description: 'Допоможемо вам знайти свою професію',
   icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: '/favicon.ico',
+    apple: '/favicon.ico',
   },
 }
 
