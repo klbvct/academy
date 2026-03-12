@@ -69,18 +69,18 @@ export function Module1ProfessionalVector({ scores, recommendations }: Module1Pr
       </h2>
 
       <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginBottom: '25px' }}>
-        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '13px' }}>
+        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '14px' }}>
           <strong style={{ color: '#1e3a8a' }}>Професійний вектор взаємодії</strong> — це ключовий профорієнтаційний показник, який визначає, з чим саме людині природніше й ефективніше працювати у професійній діяльності.
         </p>
-        <p style={{ marginBottom: '8px', fontSize: '13px', lineHeight: '1.6' }}>
+        <p style={{ marginBottom: '8px', fontSize: '14px', lineHeight: '1.6' }}>
           Методика базується на аналізі того, з яким типом об'єктів взаємодії людина:
         </p>
-        <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8', fontSize: '13px', listStyleType: 'disc' }}>
+        <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8', fontSize: '14px', listStyleType: 'disc' }}>
           <li style={{ marginBottom: '8px' }}>швидше залучається в роботу,</li>
           <li style={{ marginBottom: '8px' }}>відчуває інтерес і енергію,</li>
           <li>демонструє вищу результативність.</li>
         </ul>
-        <p style={{ lineHeight: '1.6', fontSize: '13px' }}>
+        <p style={{ lineHeight: '1.6', fontSize: '14px' }}>
           Визначення професійного вектора взаємодії допомагає звузити поле вибору галузей, уникнути випадкових рішень і обрати напрям навчання, який відповідає природним нахилам людини.
         </p>
       </div>
@@ -143,7 +143,7 @@ export function Module1ProfessionalVector({ scores, recommendations }: Module1Pr
             {[...segments].sort((a, b) => b.score - a.score).map((seg) => {
               const level = seg.score >= 6 ? 'високий' : seg.score <= 2 ? 'низький' : 'середній';
               return (
-                <li key={seg.key} style={{ marginBottom: '10px', fontSize: '13px'}}>
+                <li key={seg.key} style={{ marginBottom: '10px', fontSize: '14px'}}>
                   <strong style={{ color: '#1e3a8a' }}>{seg.label}</strong> – показник <u>{level}</u>. {klimovDescriptions[seg.key]}
                 </li>
               );

@@ -82,7 +82,7 @@ export function Module8PerceptionTypes({ scores }: Module8Props) {
       </h2>
       
       <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginBottom: '25px' }}>
-        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '13px' }}>
+        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '14px' }}>
           У цьому розділі визначаються ваші <strong style={{ color: '#1e3a8a' }}>домінуючі канали сприйняття та обробки інформації</strong>. Люди по-різному сприймають навколишній світ: хтось краще запам’ятовує інформацію через зображення, інші — через звук, рух або логічний аналіз. Розуміння власного способу сприйняття допомагає визначити найбільш ефективний стиль навчання, засвоєння нових знань та взаємодії з інформацією.<br /> 
           Результати показують, <strong style={{ color: '#1e3a8a' }}>які канали сприйняття є для вас найбільш природними та ефективними</strong>, що може допомогти обрати оптимальні методи навчання та роботи з інформацією.
         </p>
@@ -100,6 +100,10 @@ export function Module8PerceptionTypes({ scores }: Module8Props) {
                   return sorted.map((seg) => {
                     const sl = (seg.percent / 100) * circumference;
                     const gap = 1;
+                    if (sl <= gap) {
+                      offset += sl;
+                      return null;
+                    }
                     const el = (
                       <circle key={seg.key} cx="100" cy="100" r={radius} fill="none"
                         stroke={seg.color} strokeWidth="40"
@@ -144,7 +148,7 @@ export function Module8PerceptionTypes({ scores }: Module8Props) {
           <h3 style={{ marginTop: '30px', marginBottom: '15px', color: '#1e3a8a' }}><strong>Характеристика типів сприйняття:</strong></h3>
           <ul style={{ lineHeight: '1.8' }}>
             {sorted.map((seg) => (
-              <li key={seg.key} style={{ marginBottom: '10px', fontSize: '13px' }}>
+              <li key={seg.key} style={{ marginBottom: '10px', fontSize: '14px' }}>
                 <strong>{seg.name} ({Math.round(seg.percent)}%)</strong> — {seg.description}
               </li>
             ))}
@@ -154,7 +158,7 @@ export function Module8PerceptionTypes({ scores }: Module8Props) {
           {dominantType && (
             <div style={{ marginTop: '25px', padding: '20px', background: '#f8f9fa', borderRadius: '8px', borderLeft: '4px solid #3B82F6' }}>
               <h4 style={{ color: '#1e3a8a', marginBottom: '15px', marginTop: 0, fontSize: '15px', fontWeight: 'bold' }}>Рекомендації для навчання:</h4>
-              <div style={{ lineHeight: '1.6', fontSize: '13px' }}>
+              <div style={{ lineHeight: '1.6', fontSize: '14px' }}>
                 <p style={{ marginBottom: '10px' }}>
                   <strong>Домінуючий тип сприйняття:</strong> <strong style={{ color: '#1e3a8a' }}>{dominantType.name}</strong>
                 </p>
