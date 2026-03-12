@@ -96,6 +96,10 @@ export function Module1ProfessionalVector({ scores, recommendations }: Module1Pr
                   return segments.map((seg) => {
                     const sl = (seg.percent / 100) * circumference;
                     const gap = 1;
+                    if (sl <= gap) {
+                      offset += sl;
+                      return null;
+                    }
                     const el = (
                       <circle key={seg.key} cx="100" cy="100" r={radius} fill="none"
                         stroke={seg.color} strokeWidth="40"
