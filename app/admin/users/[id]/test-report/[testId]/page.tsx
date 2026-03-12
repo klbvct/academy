@@ -188,7 +188,7 @@ export default function AdminTestReportPage() {
 
           {/* Highlight box */}
           <section className="mb-10 p-5 rounded" style={{ background: '#ddd6fe36', pageBreakInside: 'avoid' }}>
-            <p style={{ fontSize: '12px', textAlign: 'left', marginBottom: 0, lineHeight: '1.6' }}>
+            <p style={{ fontSize: '14px', textAlign: 'left', marginBottom: 0, lineHeight: '1.6' }}>
               Перед Вами ваш унікальний Дизайн освіти. Результат формування індивідуальної освітньої траекторії, що враховує унікальні особливості, інтереси, здібності та життєві цілі кожної людини. Його мета — допомогти усвідомлено підійти до вибору навчання і сформувати такий освітній шлях, який максимально відповідає потенціалу та прагненням особистості.<br />
               На основі цих даних формується цілісна картина ваших здібностей і схильностей, що може стати орієнтиром під час вибору напряму навчання та майбутньої професії.<br />
               У межах цього підходу освіта розглядається як гнучка система, яку можна поєднувати з різних сучасних форматів і типів навчання: академічних програм, міжнародної освіти, онлайн-курсів, практичного досвіду, міждисциплінарних напрямів та індивідуальних освітніх проєктів.<br />
@@ -210,7 +210,7 @@ export default function AdminTestReportPage() {
                   'Мотивація та цінності',
                   'Співвідношення типів інтелекту',
                 ].map((item, i) => (
-                  <div key={i} className="flex justify-between mb-2 p-3 rounded" style={{ background: '#f3f4f6', fontSize: '12px' }}>
+                  <div key={i} className="flex justify-between mb-2 p-3 rounded" style={{ background: '#f3f4f6', fontSize: '14px' }}>
                     <span>{item}</span>
                     <span className="font-bold" style={{ color: '#0c68f5' }}>{String(i + 1).padStart(2, '0')}</span>
                   </div>
@@ -296,7 +296,7 @@ export default function AdminTestReportPage() {
               }}>09</span>
               Підготовка до вступу
             </h2>
-            <ol style={{ marginLeft: '30px', lineHeight: '1.6', listStyleType: 'decimal' }}>
+            <ol style={{ marginLeft: '30px', lineHeight: '1.6', listStyleType: 'decimal', fontSize: '14px'}}>
               <li style={{ marginTop: '1rem' }}>Вивчити представлені напрямки навчання та їх значення. Зрозуміти, що вивчатиметься в рамках цих напрямків, ознайомитись з планом навчання.</li>
               <li style={{ marginTop: '1rem' }}>Вибрати галузь знань та дізнатися в ВНЗ, які цікавлять, можливість підготовчих програм.</li>
               <li style={{ marginTop: '1rem' }}>Розглянути можливість додаткових професійних занять з профільним предметам.</li>

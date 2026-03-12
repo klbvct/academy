@@ -89,7 +89,7 @@ export function Module7HollandRIASEC({ scores }: Module7Props) {
       </h2>
       
       <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginBottom: '25px' }}>
-        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '13px' }}>
+        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '14px' }}>
           У цьому розділі визначається ваш профіль професійних інтересів відповідно до теорії американського психолога Джона Голланда, відомої як модель RIASEC. Вона описує шість основних типів особистості та професійних інтересів, кожен з яких відображає схильність людини до певного стилю діяльності, способу мислення та робочого середовища.<br />
           За результатами тесту формується ваш <strong style={{ color: '#1e3a8a' }}>професійний код</strong>, який складається з <strong style={{ color: '#1e3a8a' }}>трьох типів, що проявилися найсильніше</strong>. Саме ця комбінація допомагає зрозуміти, у яких професійних сферах ви можете почуватися найбільш природно, реалізовувати свої здібності та бути ефективним в роботі.<br />
           Отриманий код також може слугувати орієнтиром під час вибору <strong style={{ color: '#1e3a8a' }}>освітнього напряму, спеціальності або майбутньої професії</strong>, адже він відображає поєднання інтересів, мотивації та індивідуальних особливостей вашої особистості.
@@ -160,7 +160,7 @@ export function Module7HollandRIASEC({ scores }: Module7Props) {
             {topThree.map((item) => {
               const td = hollandTypes[item.typeKey];
               return (
-                <li key={item.typeKey} style={{ marginBottom: '10px', fontSize: '13px' }}>
+                <li key={item.typeKey} style={{ marginBottom: '10px', fontSize: '14px' }}>
                   <strong>{td.letter} – {td.name}</strong><br />
                   {td.description}
                 </li>
@@ -171,7 +171,7 @@ export function Module7HollandRIASEC({ scores }: Module7Props) {
           {/* Code interpretation and Career recommendation */}
           <div style={{ marginTop: '25px', padding: '20px', background: '#f8f9fa', borderRadius: '8px', borderLeft: '4px solid #3B82F6' }}>
             <h4 style={{ color: '#1e3a8a', marginBottom: '15px', marginTop: 0, fontSize: '15px', fontWeight: 'bold' }}>Інтерпретація та рекомендації</h4>
-            <div style={{ lineHeight: '1.6', fontSize: '13px' }}>
+            <div style={{ lineHeight: '1.6', fontSize: '14px' }}>
               <p style={{ marginBottom: '5px' }}>
                 <strong>Ваш професійний код {hollandCode}:</strong>
               </p>

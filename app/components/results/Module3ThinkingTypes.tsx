@@ -91,7 +91,7 @@ export function Module3ThinkingTypes({ scores }: Module3Props) {
         Домінуючі типи мислення
       </h2>
       <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginBottom: '25px' }}>
-        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '13px' }}>
+        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '14px' }}>
           Людське мислення багатогранне: у різних ситуаціях ми використовуємо різні способи аналізу, уявлення та прийняття рішень. Проте серед них завжди є ті, які проявляються частіше за інші та визначають спосіб сприйняття інформації, прийняття рішень і навчання.<br />
           У цьому розділі відображені <strong style={{ color: '#1e3a8a' }}>домінуючі типи мислення</strong> — ті, що найбільше впливають на ваш стиль мислення та можуть підказати напрямки, у яких вам буде легше розвиватися та реалізовувати свій потенціал.
         </p>
@@ -118,7 +118,7 @@ export function Module3ThinkingTypes({ scores }: Module3Props) {
           {/* Descriptions */}
           <ul style={{ lineHeight: '1.8' }}>
             {sorted.map((item) => (
-              <li key={item.key} style={{ marginBottom: '10px', fontSize: '13px' }}>
+              <li key={item.key} style={{ marginBottom: '10px', fontSize: '14px' }}>
                 <strong style={{ color: '#1e3a8a' }}>{item.name} мислення ({Math.round(item.percent)}%)</strong> — {item.description}
               </li>
             ))}

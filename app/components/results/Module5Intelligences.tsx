@@ -95,7 +95,7 @@ export function Module5Intelligences({ scores }: Module5Props) {
       </h2>
       
       <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginBottom: '25px' }}>
-        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '13px' }}>
+        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '14px' }}>
           У цьому розділі представлено визначення типів інтелекту відповідно до теорії множинного інтелекту Говарда Гарднера. Кожен тип оцінюється за шкалою від 1 до 9, де вищий показник відображає більш виражений рівень розвитку та прояву відповідних когнітивних здібностей.
         </p>
       </div>
@@ -136,7 +136,7 @@ export function Module5Intelligences({ scores }: Module5Props) {
               else if (item.progress >= 6) { level = 'високий'; emoji = '✅'; }
               else if (item.progress >= 4) { level = 'середній'; emoji = '➡️'; }
               return (
-                <li key={item.key} style={{ marginBottom: '10px', fontSize: '13px', color: '#374151' }}>
+                <li key={item.key} style={{ marginBottom: '10px', fontSize: '14px', color: '#374151' }}>
                   <strong>{emoji} {item.name} інтелект</strong> — рівень прояву <u>{level}</u> ({item.progress}/10). {item.description}
                 </li>
               );
@@ -146,7 +146,7 @@ export function Module5Intelligences({ scores }: Module5Props) {
           {/* Recommendations */}
           <div style={{ marginTop: '25px', padding: '20px', background: '#f8f9fa', borderRadius: '8px', borderLeft: '4px solid #3B82F6' }}>
             <h4 style={{ color: '#1e3a8a', marginBottom: '15px', marginTop: 0, fontSize: '15px', fontWeight: 'bold' }}>Рекомендації для розвитку</h4>
-            <div style={{ lineHeight: '1.6', fontSize: '13px' }}>
+            <div style={{ lineHeight: '1.6', fontSize: '14px' }}>
               <p style={{ marginBottom: '10px' }}>
                 <strong>Домінуючі типи інтелекту:</strong>{' '}
                 <strong style={{ color: '#1e3a8a' }}>{topThree.map((t) => t.name).join(', ')}</strong>

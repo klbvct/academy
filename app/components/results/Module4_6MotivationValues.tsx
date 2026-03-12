@@ -61,7 +61,7 @@ export function Module4_6MotivationValues({ scores }: Module4_6Props) {
       </h2>
 
       <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginBottom: '25px' }}>
-        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '13px' }}>
+        <p style={{ marginBottom: '12px', lineHeight: '1.6', fontSize: '14px' }}>
           <strong style={{ color: '#1e3a8a' }}>Мотивація та цінності</strong> - визначає, які життєві аспекти є найбільш важливими та показує конкретні фактори, які мотивують або демотивують абітурієнта.
         </p>
       </div>
@@ -69,7 +69,7 @@ export function Module4_6MotivationValues({ scores }: Module4_6Props) {
       {/* Values section (Module 4) */}
       <div style={{ marginBottom: '30px' }}>
         <h3 style={{ color: '#1e3a8a', marginBottom: '15px', fontSize: '18px', fontWeight: 'bold' }}>Ціннісні категорії:</h3>
-        <p style={{ marginBottom: '20px', fontSize: '13px', lineHeight: '1.6' }}>
+        <p style={{ marginBottom: '20px', fontSize: '14px', lineHeight: '1.6' }}>
           Результати показують, які аспекти життя є найбільш важливими для абітурієнта.
         </p>
 
@@ -138,7 +138,7 @@ export function Module4_6MotivationValues({ scores }: Module4_6Props) {
       {/* Motivation section (Module 6) */}
       <div style={{ marginBottom: '30px' }}>
         <h3 style={{ color: '#1e3a8a', marginBottom: '15px', fontSize: '18px', fontWeight: 'bold' }}>Мотиваційні фактори:</h3>
-        <p style={{ marginBottom: '20px', fontSize: '13px', lineHeight: '1.6' }}>
+        <p style={{ marginBottom: '20px', fontSize: '14px', lineHeight: '1.6' }}>
           Результати показують конкретні фактори, що мотивують або демотивують абітурієнта.
         </p>
 
@@ -225,7 +225,7 @@ export function Module4_6MotivationValues({ scores }: Module4_6Props) {
       {(hasValues || hasMotivation) && (
         <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginTop: '25px', borderLeft: '4px solid #3B82F6' }}>
           <h4 style={{ color: '#1e3a8a', marginBottom: '15px', marginTop: 0, fontSize: '15px', fontWeight: 'bold' }}>Інтерпретація та рекомендації</h4>
-          <div style={{ lineHeight: '1.6', fontSize: '13px' }}>
+          <div style={{ lineHeight: '1.6', fontSize: '14px' }}>
             <p style={{ marginBottom: '10px' }}>
               <strong>Ціннісний профіль:</strong>{' '}
               {veryImportant.length > 0
