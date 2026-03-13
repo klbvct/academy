@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Якщо це звичайний користувач, створюємо записи TestAccess для всіх тестів
-    if (role === 'user') {
+    if (user.role === 'user') {
       const tests = await prisma.test.findMany({
         select: { id: true },
       })
