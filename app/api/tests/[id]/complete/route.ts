@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyTokenAndUser, getTokenFromHeader } from '@/lib/jwt'
+import { verifyTokenAndUser, getTokenFromRequest } from '@/lib/jwt'
 import {
   calculateModule1,
   calculateModule2,
@@ -17,8 +17,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const authHeader = request.headers.get('authorization')
-    const token = getTokenFromHeader(authHeader)
+    const token = getTokenFromRequest(request)
 
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

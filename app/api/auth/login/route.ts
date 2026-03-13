@@ -61,10 +61,9 @@ export async function POST(request: NextRequest) {
     // Генеруємо JWT токен
     const token = generateToken(user.id, user.email, user.role)
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: 'Вхід успішний',
-      token,
       user: {
         id: user.id,
         fullName: user.fullName,
@@ -72,6 +71,16 @@ export async function POST(request: NextRequest) {
         role: user.role,
       },
     })
+
+    response.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60,
+      path: '/',
+    })
+
+    return response
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json(

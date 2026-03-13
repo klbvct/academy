@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken, getTokenFromHeader } from '@/lib/jwt'
+import { verifyToken, getTokenFromRequest } from '@/lib/jwt'
 
 export async function GET(
   req: NextRequest,
@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const testId = parseInt(params.id)
-    const token = getTokenFromHeader(req.headers.get('Authorization'))
+    const token = getTokenFromRequest(req)
 
     if (!token) {
       return NextResponse.json({ success: false, message: 'Не авторизований' }, { status: 401 })

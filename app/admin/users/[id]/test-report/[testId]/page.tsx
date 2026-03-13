@@ -39,11 +39,8 @@ export default function AdminTestReportPage() {
     const loadResults = async () => {
       try {
         setLoading(true)
-        const token = localStorage.getItem('token')
 
-        const response = await fetch(`/api/admin/users/${userId}/test-report/${testId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const response = await fetch(`/api/admin/users/${userId}/test-report/${testId}`)
 
         if (!response.ok) {
           setError('Помилка при завантаженні результатів')

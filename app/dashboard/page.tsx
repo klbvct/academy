@@ -42,19 +42,8 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token')
-        
-        if (!token) {
-          router.push('/login')
-          return
-        }
-
         // Получаем данные пользователя
-        const userResponse = await fetch('/api/auth/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        })
+        const userResponse = await fetch('/api/auth/me')
 
         const userData = await userResponse.json()
 
@@ -67,11 +56,7 @@ export default function DashboardPage() {
           setUser(userData.user)
 
           // Получаем информацию о тестах и статусе оплаты
-          const testsResponse = await fetch('/api/user/tests', {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          })
+          const testsResponse = await fetch('/api/user/tests')
 
           const testsData = await testsResponse.json()
           if (testsData.success) {
@@ -81,11 +66,7 @@ export default function DashboardPage() {
             for (const test of testsWithProgress) {
               if (test.hasAccess && !test.isCompleted) {
                 try {
-                  const progressResponse = await fetch(`/api/tests/${test.id}/progress`, {
-                    headers: {
-                      'Authorization': `Bearer ${token}`,
-                    },
-                  })
+                  const progressResponse = await fetch(`/api/tests/${test.id}/progress`)
                   if (progressResponse.ok) {
                     const progressData = await progressResponse.json()
                     if (progressData.success) {
@@ -101,7 +82,6 @@ export default function DashboardPage() {
             setTests(testsWithProgress)
           }
         } else {
-          localStorage.removeItem('token')
           router.push('/login')
         }
       } catch (err) {
@@ -115,8 +95,8 @@ export default function DashboardPage() {
     fetchData()
   }, [router])
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/')
   }
 
@@ -124,14 +104,11 @@ export default function DashboardPage() {
     setPurchasing(testId)
     await executeWithLoading(async () => {
       try {
-        const token = localStorage.getItem('token')
-        
         // Запрашиваем платежную ссылку LiqPay
         const response = await fetch('/api/liqpay/checkout', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({ testId }),
         })

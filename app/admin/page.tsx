@@ -25,10 +25,7 @@ export default function AdminPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token')
-        const response = await fetch('/api/admin/users', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const response = await fetch('/api/admin/users')
 
         if (!response.ok) {
           throw new Error('Помилка завантаження користувачів')
@@ -50,12 +47,10 @@ export default function AdminPage() {
   const handleToggleStatus = async (userId: number, currentStatus: boolean) => {
     setUpdating(userId)
     try {
-      const token = localStorage.getItem('token')
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ isActive: !currentStatus }),
       })

@@ -30,8 +30,8 @@ export default function AdminSidebar() {
 
       <div className="absolute bottom-6 left-4 right-4 border-t border-gray-700 pt-4">
         <button
-          onClick={() => {
-            localStorage.removeItem('token')
+          onClick={async () => {
+            await fetch('/api/auth/logout', { method: 'POST' })
             window.location.href = '/login'
           }}
           className="w-full px-4 py-3 text-gray-300 hover:bg-gray-800 rounded-lg text-base transition text-left"

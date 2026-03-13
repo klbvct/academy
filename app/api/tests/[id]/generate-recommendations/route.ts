@@ -8,7 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken, getTokenFromHeader } from '@/lib/jwt'
+import { verifyToken, getTokenFromRequest } from '@/lib/jwt'
 import { generateCareerRecommendations } from '@/lib/gemini'
 
 export async function POST(
@@ -17,8 +17,7 @@ export async function POST(
 ) {
   try {
     // 1. Authenticate user
-    const authHeader = request.headers.get('authorization')
-    const token = getTokenFromHeader(authHeader)
+    const token = getTokenFromRequest(request)
 
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -153,8 +152,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const authHeader = request.headers.get('authorization')
-    const token = getTokenFromHeader(authHeader)
+    const token = getTokenFromRequest(request)
 
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

@@ -90,12 +90,10 @@ export default function ResultsPage() {
   // Helper function to generate recommendations
   const generateRecommendations = async (id: string): Promise<any> => {
     try {
-      const token = localStorage.getItem('token')
       const response = await fetch(`/api/tests/${id}/generate-recommendations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
       })
 
@@ -121,14 +119,9 @@ export default function ResultsPage() {
       try {
         setLoading(true)
         setProgressPercent(0)
-        const token = localStorage.getItem('token')
 
         setProgressPercent(20)
-        const response = await fetch(`/api/tests/${testId}/results`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        const response = await fetch(`/api/tests/${testId}/results`)
 
         if (!response.ok) {
           setError('Помилка при завантаженні результатів')

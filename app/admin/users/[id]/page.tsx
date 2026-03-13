@@ -65,12 +65,8 @@ export default function UserDetailPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token')
-        
         // Загружаем данные пользователя
-        const userResponse = await fetch(`/api/admin/users/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const userResponse = await fetch(`/api/admin/users/${userId}`)
 
         if (!userResponse.ok) {
           throw new Error('Помилка завантаження користувача')
@@ -96,9 +92,7 @@ export default function UserDetailPage() {
         })
 
         // Загружаем информацию о платежах
-        const paymentsResponse = await fetch(`/api/admin/users/${userId}/payments`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const paymentsResponse = await fetch(`/api/admin/users/${userId}/payments`)
 
         if (paymentsResponse.ok) {
           const paymentsData = await paymentsResponse.json()
@@ -135,12 +129,10 @@ export default function UserDetailPage() {
 
     setIsSaving(true)
     try {
-      const token = localStorage.getItem('token')
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       })
@@ -170,14 +162,12 @@ export default function UserDetailPage() {
     setAccessUpdateError('')
 
     try {
-      const token = localStorage.getItem('token')
       const firstTest = testAccess[0]
-      
+
       const response = await fetch(`/api/admin/users/${userId}/payments`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           testId: firstTest.testId,
@@ -217,14 +207,12 @@ export default function UserDetailPage() {
     setResetSuccess(false)
 
     try {
-      const token = localStorage.getItem('token')
       const firstTest = testAccess[0]
-      
+
       const response = await fetch(`/api/admin/users/${userId}/reset-test`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           testId: firstTest.testId,
@@ -260,10 +248,8 @@ export default function UserDetailPage() {
     setIsDeleting(true)
     setDeleteError('')
     try {
-      const token = localStorage.getItem('token')
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
       })
 
       const data = await response.json()

@@ -33,12 +33,7 @@ export default function TestPage() {
   useEffect(() => {
     const loadProgress = async () => {
       try {
-        const token = localStorage.getItem('token')
-        const response = await fetch(`/api/tests/${testId}/progress`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        const response = await fetch(`/api/tests/${testId}/progress`)
 
         if (response.ok) {
           const data = await response.json()
@@ -136,13 +131,11 @@ export default function TestPage() {
   const saveAnswers = async (): Promise<boolean> => {
     try {
       setSaving(true)
-      const token = localStorage.getItem('token')
 
       const response = await fetch('/api/tests/answers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           testId: parseInt(testId),
@@ -168,8 +161,6 @@ export default function TestPage() {
   const handleCompleteTest = async () => {
     setCompleting(true)
     try {
-      const token = localStorage.getItem('token')
-
       // Зберегти фінальні відповіді
       const saved = await saveAnswers()
 
@@ -184,7 +175,6 @@ export default function TestPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ answers }),
       })

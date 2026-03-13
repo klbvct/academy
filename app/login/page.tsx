@@ -40,7 +40,6 @@ export default function LoginPage() {
         const data = await response.json()
 
         if (data.success) {
-          localStorage.setItem('token', data.token)
           // Перенаправляем в зависимости от роли
           if (data.user.role === 'admin') {
             router.push('/admin')

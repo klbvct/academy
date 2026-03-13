@@ -87,8 +87,6 @@ function ResetPasswordContent() {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        // Сохраняем токен и перенаправляем в кабинет
-        localStorage.setItem('token', data.token)
         setIsSuccess(true)
 
         // Перенаправляем через 2 секунды

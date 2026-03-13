@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken, getTokenFromHeader } from '@/lib/jwt'
+import { verifyToken, getTokenFromRequest } from '@/lib/jwt'
 
 export async function GET(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('Authorization')
-    const token = getTokenFromHeader(authHeader)
+    const token = getTokenFromRequest(request)
 
     if (!token) {
       return NextResponse.json(

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken, getTokenFromHeader } from '@/lib/jwt'
+import { verifyToken, getTokenFromRequest } from '@/lib/jwt'
 
 interface TestResult {
   id: number
@@ -20,7 +20,7 @@ export async function GET(
 ) {
   try {
     // Verify admin token
-    const token = req.headers.get('authorization')?.replace('Bearer ', '')
+    const token = getTokenFromRequest(req)
     if (!token) {
       return NextResponse.json({ message: 'Не авторизовано' }, { status: 401 })
     }

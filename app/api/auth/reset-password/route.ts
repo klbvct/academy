@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return NextResponse.json(
         { success: false, message: 'Пароль повинен бути не менше 6 символів' },
         { status: 400 }
@@ -84,11 +84,10 @@ export async function POST(request: NextRequest) {
     // Генерируем новый JWT токен для автоматической авторизации
     const jwtToken = generateToken(updatedUser.id, updatedUser.email, updatedUser.role)
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         success: true,
         message: 'Пароль успішно змінено',
-        token: jwtToken,
         user: {
           id: updatedUser.id,
           fullName: updatedUser.fullName,
@@ -97,6 +96,16 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 }
     )
+
+    response.cookies.set('token', jwtToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60,
+      path: '/',
+    })
+
+    return response
   } catch (error) {
     console.error('Reset password error:', error)
     return NextResponse.json(

@@ -16,15 +16,7 @@ export default function AdminLayout({
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const token = localStorage.getItem('token')
-        if (!token) {
-          router.push('/login')
-          return
-        }
-
-        const response = await fetch('/api/auth/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const response = await fetch('/api/auth/me')
 
         if (!response.ok) {
           router.push('/login')

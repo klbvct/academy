@@ -54,12 +54,8 @@ export default function TestAnswersPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token')
-        
         // Load test results
-        const response = await fetch(`/api/admin/users/${userId}/test-results`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const response = await fetch(`/api/admin/users/${userId}/test-results`)
 
         if (!response.ok) {
           throw new Error('Помилка завантаження даних')

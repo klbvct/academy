@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken, getTokenFromHeader } from '@/lib/jwt'
+import { verifyToken, getTokenFromRequest } from '@/lib/jwt'
 import { getLiqPayInstance } from '@/lib/liqpay'
 
 // POST - создать платеж на LiqPay
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization')
-    const token = getTokenFromHeader(authHeader)
+    const token = getTokenFromRequest(request)
 
     if (!token) {
       return NextResponse.json(
