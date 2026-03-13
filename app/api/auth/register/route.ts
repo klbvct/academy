@@ -28,9 +28,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return NextResponse.json(
-        { success: false, message: 'Пароль повинен мати мінімум 6 символів' },
+        { success: false, message: 'Пароль повинен мати мінімум 8 символів' },
         { status: 400 }
       )
     }
@@ -50,10 +50,6 @@ export async function POST(request: NextRequest) {
     // Хешуємо пароль
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Визначаємо роль (адмін або звичайний користувач)
-    const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim()
-    const role = normalizedEmail === adminEmail ? 'admin' : 'user'
-
     // Створюємо користувача
     const user = await prisma.user.create({
       data: {
@@ -62,7 +58,7 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         birthDate: birthDate ? new Date(birthDate) : null,
         phone,
-        role,
+        role: 'user',
       },
     })
 

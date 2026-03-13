@@ -33,26 +33,11 @@ export async function POST(request: NextRequest) {
       where: { email: normalizedEmail },
     })
 
-    // Якщо користувач не знайдений но це admin email - створюємо його
     if (!user) {
-      const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim()
-      if (normalizedEmail === adminEmail) {
-        // Автоматично створюємо адміна при першому вході
-        const hashedPassword = await bcrypt.hash(password, 10)
-        user = await prisma.user.create({
-          data: {
-            fullName: 'Адміністратор',
-            email: normalizedEmail,
-            password: hashedPassword,
-            role: 'admin',
-          },
-        })
-      } else {
-        return NextResponse.json(
-          { success: false, message: 'Невірний email або пароль' },
-          { status: 401 }
-        )
-      }
+      return NextResponse.json(
+        { success: false, message: 'Невірний email або пароль' },
+        { status: 401 }
+      )
     }
 
     // Перевіряємо пароль
