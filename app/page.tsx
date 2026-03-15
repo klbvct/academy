@@ -144,7 +144,7 @@ export default function Home() {
         {/* ── HERO ── */}
         <section className="relative overflow-hidden bg-white pt-20 pb-28 md:pt-20 md:pb-36">
           {/* gradient orbs */}
-          <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
             <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-[600px] w-[600px] rounded-full bg-blue-100/70 blur-3xl" />
             <div className="absolute top-10 -right-32 h-80 w-80 rounded-full bg-blue-100/40 blur-2xl" />
             <div className="absolute bottom-0 -left-32 h-64 w-64 rounded-full bg-blue-50/40 blur-2xl" />
